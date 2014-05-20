@@ -32,6 +32,7 @@ $(function(){
         
         var timeElement = controlsElement.find('[data-video-control-time]');
         
+        var fullscreen = false;
         var playing = false;
         
         function play(){
@@ -94,39 +95,62 @@ $(function(){
             clearTimeout(fullscreenReflowTimeout);
             fullscreenReflowTimeout = setTimeout(function(){
                 
-                if(windowIsFullscreen()){
+                if(!isFullscreen()) returm;
                     
-                    // Fullscreen
-                    container.addClass('fullscreen');
-                    container.parents().addClass('fullscreen');
+                var fullscreenCss = {
+                    'width': $(window).width(),
+                    'height': $(window).height()
+                };
                     
-                    var fullscreenCss = {
-                        'width': $(window).width(),
-                        'height': $(window).height()
-                    };
-                    
-                    videoElement.css(fullscreenCss);
-                    container.css(fullscreenCss);
-
-                }
-                else{
-
-                    // Not fullscreen
-                    videoElement.removeAttr('style');
-                    container.removeAttr('style');
-                    container.removeClass('fullscreen');
-                    container.parents().removeClass('fullscreen');
-
-                    showControls();
-
-                }
+                videoElement.css(fullscreenCss);
+                container.css(fullscreenCss);
                 
             }, fullscreenReflowDelay);
         }
+        
+        function onFullscreenStateChange(){
+            
+            if(isFullscreen()){
+                container.addClass('fullscreen');
+                    container.parents().addClass('fullscreen');
+            }
+            else{
+                
+                videoElement.removeAttr('style');
+                container.removeAttr('style');
+                container.removeClass('fullscreen');
+                container.parents().removeClass('fullscreen');
+
+                showControls();
+                
+            }
+            
+            fullscreenReflow();
+            
+        }
+        
+        function isFullscreen(){
+            return fullscreen;
+        }
                
         function enterFullscreen(){
-            
-            if(windowIsFullscreen()) return;
+            fullscreen = true;
+            enterDocumentFullscreen();
+            onFullscreenStateChange();
+        }
+        
+        function leaveFullscreen(){
+            fullscreen = false;
+            leaveDocumentFullscreen();
+            onFullscreenStateChange();
+        }
+        
+        function isDocumentFullscreen(){
+            return (document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen || document.msFullscreenElement);
+        }
+        
+        function enterDocumentFullscreen(){
+            if(isDocumentFullscreen()) return;
 
             if(document.documentElement.requestFullScreen){  
                 document.documentElement.requestFullScreen();  
@@ -137,16 +161,11 @@ $(function(){
             else if(document.documentElement.webkitRequestFullScreen){  
                 document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);  
             }
-            
         }
         
-        function windowIsFullscreen(){
-            return (!window.screenTop && !window.screenY);
-        }
-        
-        function leaveFullscreen(){
+        function leaveDocumentFullscreen(){
             
-            if(!windowIsFullscreen()) return;
+            if(!isDocumentFullscreen()) return;
 
             if(document.cancelFullScreen){  
                 document.cancelFullScreen();  
@@ -161,7 +180,7 @@ $(function(){
         }
         
         function toggleFullscreen(){
-            if(windowIsFullscreen()){
+            if(fullscreen){
                 leaveFullscreen();
             }
             else{
@@ -180,7 +199,7 @@ $(function(){
         }
         
         function onHumanIdleStateChange(){
-            if(windowIsFullscreen()){
+            if(isFullscreen()){
                 if(humanIdle){
                     hideControls();
                 }
@@ -202,7 +221,26 @@ $(function(){
         }
         
         $(window).on('resize', fullscreenReflow);
-        $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', fullscreenReflow);
+        
+        document.addEventListener("fullscreenchange", function () {
+            fullscreen = !!document.fullscreen;
+            onFullscreenStateChange();
+        }, false);
+
+        document.addEventListener("mozfullscreenchange", function () {
+            fullscreen = !!document.mozFullScreen;
+            onFullscreenStateChange();
+        }, false);
+
+        document.addEventListener("webkitfullscreenchange", function () {
+            fullscreen = !!document.webkitIsFullScreen;
+            onFullscreenStateChange();
+        }, false);
+
+        document.addEventListener("msfullscreenchange", function () {
+            fullscreen = !!document.msFullscreenElement;
+            onFullscreenStateChange();
+        }, false);
         
         container.on('mousemove', humanActivity);
         container.on('click', humanActivity);

@@ -46,7 +46,9 @@
         <div data-video-player class="video-player">
             <div class="row video-video">
                 <div class="large-12 columns">
-                    <video {{ _self.attributes(attrs) }} /></video>
+                    <div class="flex-video">
+                        <video {{ _self.attributes(attrs) }} /></video>
+                    </div>
                 </div>
             </div>
             <div class="row video-controls" data-video-controls="{{ attrs.id }}">
