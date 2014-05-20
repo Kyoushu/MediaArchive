@@ -149,7 +149,7 @@ class Processor{
         if($tvShowAlias) return $tvShowAlias->getTvShow();
         
         $tvdbClient = $this->getTvdbClient();
-        $series = $tvdbClient->getSeries($show->getName());
+        $series = $tvdbClient->getSeries($tvShowName);
         
         $serie = reset($series);
         
