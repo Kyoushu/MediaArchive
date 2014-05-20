@@ -8,6 +8,7 @@ $(function(){
         var seekBySliderTimeout;
         
         var fullscreenReflowDelay = 100;
+        var bufferingOverlayReflowDelay = 100;
         
         var humanIdleDelay = 2500;
         var humanIdleTimeout;
@@ -22,6 +23,11 @@ $(function(){
         var video = videoElement[0];
         var videoLoaded = false;
         
+        var bufferingOverlayElement = $('<div>')
+                .addClass('buffering-overlay')
+                .append( $('<i>').addClass('fa fa-spinner fa-spin') )
+                .appendTo(videoElement.parent());
+        
         var playElement = controlsElement.find('[data-video-control-play]');
         var pauseElement = controlsElement.find('[data-video-control-pause]');
         var fullscreenElement = controlsElement.find('[data-video-control-fullscreen]');
@@ -34,6 +40,10 @@ $(function(){
         
         var fullscreen = false;
         var playing = false;
+        
+        function isVideoPaused(){
+            return !playing;
+        }
         
         function play(){
             video.play();
@@ -52,8 +62,10 @@ $(function(){
             var resumePlaying = playing;
             pause();
             seekElement.foundation('slider', 'set_value', positionPercent);
+            
             var time = (video.duration / 100) * positionPercent;
             video.currentTime = time;
+            
             if(resumePlaying) play();
         }
         
@@ -67,18 +79,26 @@ $(function(){
             clearTimeout(updateTimeTimeout);
         }
         
+        function isVideoStreaming(){
+            return !(video.paused || video.ended || video.seeking || video.readyState < video.HAVE_FUTURE_DATA);
+        }
+        
         function startUpdateTime(){
             clearTimeout(updateTimeTimeout);
             
-            var seconds = parseInt(video.currentTime % 60);
-            var minutes = parseInt((video.currentTime / 60) % 60);
+            if(isVideoStreaming()){
             
-            if(seconds < 10) seconds = '0' + seconds;
-            
-            timeElement.text(minutes + ':' + seconds);
-            
-            var positionPercent = (100 / video.duration) * video.currentTime;
-            seekElement.foundation('slider', 'set_value', positionPercent);
+                var seconds = parseInt(video.currentTime % 60);
+                var minutes = parseInt((video.currentTime / 60) % 60);
+
+                if(seconds < 10) seconds = '0' + seconds;
+
+                timeElement.text(minutes + ':' + seconds);
+
+                var positionPercent = (100 / video.duration) * video.currentTime;
+                seekElement.foundation('slider', 'set_value', positionPercent);
+                
+            }
             
             updateTimeTimeout = setTimeout(startUpdateTime, 1000);
         }
@@ -90,6 +110,28 @@ $(function(){
         }
         
         var fullscreenReflowTimeout;
+        var bufferingOverlayReflowTimeout;
+        
+        function bufferingOverlayReflow(){
+            
+            clearTimeout(bufferingOverlayReflowTimeout);
+            bufferingOverlayReflowTimeout = setTimeout(function(){
+                
+                if(isFullscreen()){
+                    var height = $(window).height();
+                }
+                else{
+                    var height = bufferingOverlayElement.closest('.columns').height();
+                }
+                
+                bufferingOverlayElement.css({
+                    'height': height + 'px',
+                    'line-height': height + 'px'
+                });
+                
+            }, bufferingOverlayReflowDelay);
+            
+        }
         
         function fullscreenReflow(){
             clearTimeout(fullscreenReflowTimeout);
@@ -126,6 +168,7 @@ $(function(){
             }
             
             fullscreenReflow();
+            bufferingOverlayReflow();
             
         }
         
@@ -220,7 +263,21 @@ $(function(){
             }, humanIdleDelay);
         }
         
+        function onVideoStreamingStateChange(){
+            
+            if(!isVideoStreaming() && !isVideoPaused()){
+                bufferingOverlayElement.css('display', 'block');
+            }
+            else{
+                bufferingOverlayElement.css('display', 'none');
+            }
+            
+        }
+        
+        videoElement.on('play pause playing seeking stalled', onVideoStreamingStateChange);
+        
         $(window).on('resize', fullscreenReflow);
+        $(window).on('resize', bufferingOverlayReflow);
         
         document.addEventListener("fullscreenchange", function () {
             fullscreen = !!document.fullscreen;
@@ -251,16 +308,6 @@ $(function(){
         seekHandleElement.on('mouseup', delayedSeekBySlider);
         seekHandleElement.on('touchend', delayedSeekBySlider);
         
-        seekElement.on('click', function(e){
-           
-           var width = seekElement.width();
-           var offsetX = e.offsetX;
-           var seekPercent = (100 / width) * offsetX;
-           
-           seekByPercent(seekPercent);
-           
-        });
-        
         videoElement.on('loadedmetadata', function(){
             videoLoaded = true;
             playElement.removeClass('disabled');
@@ -285,6 +332,7 @@ $(function(){
         });
         
         video.load();
+        bufferingOverlayReflow();
         
     });
     

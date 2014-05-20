@@ -61,6 +61,26 @@ body.fullscreen{
 
     }
     
+    .video-video{
+        
+        .flex-video{
+            background: #000;
+        }
+        
+        .buffering-overlay{
+            background: rgba(0,0,0,0.75);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            color: #fff;
+            font-size: 4rem;
+            text-align: center;
+            display: none;
+        }
+        
+    }
+    
     .video-controls{
     
         .button{
