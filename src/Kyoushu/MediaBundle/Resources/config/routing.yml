@@ -29,6 +29,10 @@ kyoushu_media_admin_process_media:
     pattern: /admin/process-media/{id}
     defaults: { _controller: KyoushuMediaBundle:Admin:processMedia }
     
+kyoushu_media_admin_process_tv_show:
+    pattern: /admin/process-tv-show/{id}
+    defaults: { _controller: KyoushuMediaBundle:Admin:processTvShow }
+    
 kyoushu_media_admin_start_media_encode_job:
     pattern: /admin/start-media-encode-job/{id}
     defaults: { _controller: KyoushuMediaBundle:Admin:startMediaEncodeJob }
@@ -53,13 +57,19 @@ kyoushu_media_watch:
     defaults: { _controller: KyoushuMediaBundle:Media:watch }
     
 kyoushu_media_tvshow:
-    pattern: /tv/{tvShowSlug}/{seasonNumber}
+    pattern: /tv/show/{tvShowSlug}/{seasonNumber}
     defaults:
-        _controller: KyoushuMediaBundle:TvShow:index
+        _controller: KyoushuMediaBundle:TvShow:tvShow
         seasonNumber: ~
     
 kyoushu_media_tvshow_watch:
-    pattern: /tv/{tvShowSlug}/watch/{mediaId}/{mediaNameSlug}
+    pattern: /tv/show/{tvShowSlug}/watch/{mediaId}/{mediaNameSlug}
     defaults:
-        _controller: KyoushuMediaBundle:TvShow:watch
+        _controller: KyoushuMediaBundle:TvShow:watchEpisode
         mediaNameSlug: ~
+        
+kyoushu_media_tvshows:
+    pattern: /tv/{tvShowNameFirstLetter}
+    defaults:
+        _controller: KyoushuMediaBundle:TvShow:index
+        tvShowNameFirstLetter: ~

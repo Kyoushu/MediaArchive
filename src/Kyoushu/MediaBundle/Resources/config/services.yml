@@ -12,7 +12,7 @@ services:
            
     kyoushu_media.processor:
         class: Kyoushu\MediaBundle\MediaScanner\Processor
-        arguments: ['@doctrine.orm.entity_manager', '@kyoushu_media.tvdb']
+        arguments: ['@doctrine.orm.entity_manager', '@kyoushu_media.tvdb', '%tvdb_base_url%']
         
     kyoushu_media.tvdb:
         class: Moinax\TvDb\Client
@@ -91,3 +91,8 @@ services:
         arguments: ['%kernel.root_dir%']
         tags:
             - { name: doctrine.event_subscriber, connection: default }
+            
+    kyoushu_media.imagine.filter.lighten_loader:
+        class: Kyoushu\MediaBundle\Imagine\Filter\Loader\LightenFilterLoader
+        tags:
+            - { name: imagine.filter.loader, filter: lighten }

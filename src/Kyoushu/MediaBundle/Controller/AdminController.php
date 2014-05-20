@@ -260,6 +260,32 @@ class AdminController extends Controller
         
     }
     
+    public function processTvShowAction(Request $request, $id){
+        
+        $show = $this->getDoctrine()
+            ->getRepository('KyoushuMediaBundle:TvShow')
+            ->find($id);
+        
+        if(!$show){
+            throw $this->createNotFoundException('The specified TV show could not be found');
+        }
+        
+        $scanner = $this->get('kyoushu_media.processor');
+        $scanner->processTvShow($show);
+        
+        $request->getSession()->getFlashBag()->add('notice', sprintf(
+            'TV show "%s" processed',
+            $show->getName()
+        ));        
+        
+        $redirectUrl = $this->generateUrl('kyoushu_media_admin_list', array(
+           'entityName' => 'tv_show' 
+        ));
+        
+        return $this->redirect($redirectUrl);
+        
+    }
+    
     public function startMediaEncodeJobAction(Request $request, $id){
         
         $job = $this->getDoctrine()

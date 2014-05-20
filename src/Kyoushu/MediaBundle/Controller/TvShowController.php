@@ -7,7 +7,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class TvShowController extends Controller
 {
     
-    public function indexAction($tvShowSlug, $seasonNumber){
+    public function indexAction($tvShowNameFirstLetter){
+        
+    }
+    
+    public function tvShowAction($tvShowSlug, $seasonNumber){
         
         $show = $this->getDoctrine()->getManager()
                 ->getRepository('KyoushuMediaBundle:TvShow')
@@ -63,7 +67,7 @@ class TvShowController extends Controller
         
     }
     
-    public function watchAction($tvShowSlug, $mediaId){
+    public function watchEpisodeAction($tvShowSlug, $mediaId){
         
         $episode = $this->getDoctrine()->getManager()
             ->getRepository('KyoushuMediaBundle:Media')

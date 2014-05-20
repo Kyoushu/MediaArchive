@@ -184,6 +184,7 @@ kyoushu_media:
                 
             tv_show:
                 class: Kyoushu\MediaBundle\Entity\TvShow
+                list_table_class: \Kyoushu\MediaBundle\Table\Type\AdminListTvShowsType
                 name_property: name
                 list_finder_filters:
                     name:
@@ -204,6 +205,16 @@ kyoushu_foundation:
 
 avalanche_imagine:
     filters:
+        
+        light_background:
+            type: chain
+            options:
+                filters:
+                    thumbnail:
+                        size: [1920, 1200]
+                        mode: outbound
+                    lighten:
+                        percentage: 70
         
         # http://fiddle.jshell.net/WqU7p/7/show/light/
         # {"filterPrefix":"columns","aspectRatio":1.777,"columns":[1,2,3,4,5,6,7,8,9,10,11,12],"containerWidths":{"small":640,"large":1000}}

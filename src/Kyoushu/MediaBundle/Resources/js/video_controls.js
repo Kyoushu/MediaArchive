@@ -137,7 +137,7 @@ $(function(){
             clearTimeout(fullscreenReflowTimeout);
             fullscreenReflowTimeout = setTimeout(function(){
                 
-                if(!isFullscreen()) returm;
+                if(!isFullscreen()) return;
                     
                 var fullscreenCss = {
                     'width': $(window).width(),

@@ -78,6 +78,30 @@ class TvShow
     protected $aliases;
     
     /**
+     * @var string
+     *
+     * @ORM\Column(name="fanArtWebPath", type="string", length=255, nullable=true)
+     * @Form\Field(type="text", weight=50)
+     */
+    protected $fanArtWebPath;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="posterWebPath", type="string", length=255, nullable=true)
+     * @Form\Field(type="text", weight=60)
+     */
+    protected $posterWebPath;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="bannerWebPath", type="string", length=255, nullable=true)
+     * @Form\Field(type="text", weight=70)
+     */
+    protected $bannerWebPath;
+    
+    /**
      * Constructor
      */
     public function __construct()
@@ -296,6 +320,61 @@ class TvShow
         return $this->description;
     }
     
+    /**
+     * Get fanArtWebPath
+     * @return string
+     */
+    public function getFanArtWebPath() {
+        return $this->fanArtWebPath;
+    }
+
+    /**
+     * Get posterWebpath
+     * @return string
+     */
+    public function getPosterWebPath() {
+        return $this->posterWebPath;
+    }
+
+    /**
+     * Get bannerWebPath
+     * @return string
+     */
+    public function getBannerWebPath() {
+        return $this->bannerWebPath;
+    }
+
+    /**
+     * Set fanArtWebPath
+     * @param string $fanArtWebPath
+     * @return \Kyoushu\MediaBundle\Entity\TvShow
+     */
+    public function setFanArtWebPath($fanArtWebPath) {
+        $this->fanArtWebPath = $fanArtWebPath;
+        return $this;
+    }
+
+    /**
+     * Set posterWebPath
+     * @param string $posterWebPath
+     * @return \Kyoushu\MediaBundle\Entity\TvShow
+     */
+    public function setPosterWebPath($posterWebPath) {
+        $this->posterWebPath = $posterWebPath;
+        return $this;
+    }
+
+    /**
+     * Set bannerWebPath
+     * @param type $bannerWebPath
+     * @return \Kyoushu\MediaBundle\Entity\TvShow
+     */
+    public function setBannerWebPath($bannerWebPath) {
+        $this->bannerWebPath = $bannerWebPath;
+        return $this;
+    }
+
+        
     public function __toString(){
         return $this->getName();
     }

@@ -21,6 +21,7 @@ class Processor{
     private $screencapOffset;
     private $webRootDir;
     private $tvdbClient;
+    private $tvdbBaseUrl;
     
     const REGEX_EPISODE_INFO = '/^(?P<tvShowName>.+)( \- |\.)((?P<airDate>[0-9]{4}\-[0-9]{2}\-[0-9]{2})|S(?P<seasonNumberA>[0-9]+)E(?P<episodeNumberA>[0-9]+)|((?P<seasonNumberB>[1-9]([0-9]+)?)x(?P<episodeNumberB>[0-9]+)))/i';
     const REGEX_MOVIE_INFO = '/^(?P<movieName>[^(]+)\(?(?P<year>(1|2)[0-9]{3})\)?/';
@@ -28,9 +29,10 @@ class Processor{
     
     const GROUP_DIR_DIVISION = 500;
     
-    public function __construct(EntityManager $entityManager, Client $tvdbClient){
+    public function __construct(EntityManager $entityManager, Client $tvdbClient, $tvdbBaseUrl){
         $this->entityManager = $entityManager;
         $this->tvdbClient = $tvdbClient;
+        $this->tvdbBaseUrl = $tvdbBaseUrl;
         $this->screencapRootDir = null;
         $this->screencapOffset = null;
         $this->webRootDir;
@@ -147,14 +149,12 @@ class Processor{
         if($tvShowAlias) return $tvShowAlias->getTvShow();
         
         $tvdbClient = $this->getTvdbClient();
-        $series = $tvdbClient->getSeries($tvShowName);
+        $series = $tvdbClient->getSeries($show->getName());
         
         $serie = reset($series);
         
         if($serie){
-            
             $existingTvShow = $em->getRepository('KyoushuMediaBundle:TvShow')->findOneBy(array('tvDbId' => $serie->id));
-            
             if($existingTvShow){
                 
                 $alias = new TvShowAlias();
@@ -165,30 +165,20 @@ class Processor{
                 $em->flush();
                 
                 return $existingTvShow;
-                
             }
-            
-            $newTvShow = new TvShow();
-            
-            $newTvShow->setName($serie->name);
-            $newTvShow->setDescription($serie->overview);
-            $newTvShow->setTvDbId($serie->id);
-            $newTvShow->setProcessed(new \DateTime('now'));
-            
-            $alias = new TvShowAlias();
-            $alias->setName($tvShowName);
-            $newTvShow->addAlias($alias);
-            
         }
-        else{
             
-            $newTvShow = new TvShow();
-            $newTvShow->setName($tvShowName);
-            
-        }
+        $newTvShow = new TvShow();
+        $newTvShow->setName($tvShowName);
+        
+        $alias = new TvShowAlias();
+        $alias->setName($tvShowName);
+        $newTvShow->addAlias($alias);
         
         $em->persist($newTvShow);
         $em->flush();
+        
+        $this->processTvShow($newTvShow);
         
         return $newTvShow;
         
@@ -344,6 +334,72 @@ class Processor{
         }
         
         return $media;
+        
+    }
+    
+    public function processTvShow(TvShow $show){
+        
+        $tvdbClient = $this->getTvdbClient();
+        
+        if($show->getTvDbId()){
+            $serie = $tvdbClient->getSerie($show->getTvDbId());
+        }
+        else{
+            $series = $tvdbClient->getSeries($show->getName());
+            $serie = reset($series);
+        }
+        
+        $imagesBaseDir = sprintf('%s/tvdb', $this->screencapRootDir);
+        $regexRealWebRootDir = sprintf('/^%s\//', preg_quote(realpath($this->webRootDir), '/'));
+        
+        if($serie){
+            
+            $show->setName($serie->name);
+            $show->setDescription($serie->overview);
+            $show->setTvDbId($serie->id);
+            
+            $banners = $tvdbClient->getBanners( $serie->id );
+            
+            foreach($banners as $banner){
+                
+                if(!in_array($banner->type, array('fanart', 'poster', 'graphical'))) continue;
+                
+                if($banner->type === 'fanart' && $show->getFanArtWebPath()) continue;
+                if($banner->type === 'poster' && $show->getPosterWebPath()) continue;
+                if($banner->type === 'graphical' && $show->getBannerWebPath()) continue;
+                
+                $imageExt = preg_replace('/^.+\.([^\.]+)$/', '${1}', $banner->path);
+                $imageUrl = sprintf('%s/banners/%s', $this->tvdbBaseUrl, $banner->path);
+                $imageFilename = sprintf('%s.%s', $show->getId(), $imageExt);
+                $imageAbsPath = sprintf('%s/%s/%s', $imagesBaseDir, $banner->type, $imageFilename);
+                
+                echo $imageUrl . "\n";
+                
+                if(!file_exists(dirname($imageAbsPath))){
+                    mkdir(dirname($imageAbsPath), 0777, true);
+                }
+                
+                if(!file_exists($imageAbsPath)){
+                    file_put_contents($imageAbsPath, fopen($imageUrl, 'r'));
+                }
+                
+                $imageWebPath = preg_replace($regexRealWebRootDir, '', realpath($imageAbsPath));
+                
+                if($banner->type === 'fanart') $show->setFanArtWebPath($imageWebPath);
+                if($banner->type === 'poster') $show->setPosterWebPath($imageWebPath);
+                if($banner->type === 'graphical') $show->setBannerWebPath($imageWebPath);
+                
+            }
+            
+        }
+        
+        $show->setProcessed(new \DateTime('now'));
+            
+        $em = $this->getEntityManager();
+        $em->persist($show);
+        $em->flush();
+        
+        return $show;
         
     }
     
