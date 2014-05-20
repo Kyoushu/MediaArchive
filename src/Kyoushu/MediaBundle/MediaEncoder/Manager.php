@@ -180,7 +180,7 @@ class Manager {
         }
         
         $cmd = sprintf(
-            '%s/console --env=%s %s %s',
+            '%s/console --env=%s %s --id=%s',
             $this->kernelRootDir,
             $this->environment,
             StartEncodeJobCommand::NAME,
