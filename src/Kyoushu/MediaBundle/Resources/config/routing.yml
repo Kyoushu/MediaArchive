@@ -1,0 +1,65 @@
+kyoushu_media_homepage:
+    pattern:  /
+    defaults: { _controller: KyoushuMediaBundle:Default:index }
+    
+kyoushu_media_admin:
+    pattern: /admin
+    defaults: { _controller: KyoushuMediaBundle:Admin:index }
+    
+kyoushu_media_admin_list:
+    pattern: /admin/list/{entityName}/{page}/{perPage}
+    defaults:
+        _controller: KyoushuMediaBundle:Admin:list
+        perPage: 30
+        page: 1
+    
+kyoushu_media_admin_edit:
+    pattern: /admin/edit/{entityName}/{id}
+    defaults: { _controller: KyoushuMediaBundle:Admin:edit, id: ~ }
+    
+kyoushu_media_admin_delete:
+    pattern: /admin/delete/{entityName}/{id}/{confirm}
+    defaults: { _controller: KyoushuMediaBundle:Admin:delete, confirm: ~ }
+    
+kyoushu_media_admin_scan_media_source:
+    pattern: /admin/scan-media-source/{id}
+    defaults: { _controller: KyoushuMediaBundle:Admin:scanMediaSource }
+    
+kyoushu_media_admin_process_media:
+    pattern: /admin/process-media/{id}
+    defaults: { _controller: KyoushuMediaBundle:Admin:processMedia }
+    
+kyoushu_media_admin_start_media_encode_job:
+    pattern: /admin/start-media-encode-job/{id}
+    defaults: { _controller: KyoushuMediaBundle:Admin:startMediaEncodeJob }
+    
+kyoushu_media_admin_entity_autocomplete:
+    pattern: /admin/entity-autocomplete/{entityClass}/{property}/{searchProperties}/{searchString}
+    options:
+        expose: true
+    defaults:
+        _controller: KyoushuMediaBundle:Admin:entityAutocomplete
+    requirements:
+        searchProperties: ^[a-zA-Z\.,]+$
+        entityClass: ^[a-zA-Z:]+$
+        property: ^[a-zA-Z]+$
+        
+kyoushu_media_admin_list_context_encode_media:
+    pattern: /admin/encode-media
+    defaults: { _controller: KyoushuMediaBundle:Admin:encodeMediaContext }
+        
+kyoushu_media_watch:
+    pattern: /watch/{mediaId}
+    defaults: { _controller: KyoushuMediaBundle:Media:watch }
+    
+kyoushu_media_tvshow:
+    pattern: /tv/{tvShowSlug}/{seasonNumber}
+    defaults:
+        _controller: KyoushuMediaBundle:TvShow:index
+        seasonNumber: ~
+    
+kyoushu_media_tvshow_watch:
+    pattern: /tv/{tvShowSlug}/watch/{mediaId}/{mediaNameSlug}
+    defaults:
+        _controller: KyoushuMediaBundle:TvShow:watch
+        mediaNameSlug: ~

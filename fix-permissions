@@ -1,0 +1,15 @@
+#!/usr/bin/php
+<?php
+
+    echo "Fixing permissions...\n";
+    
+    $paths = array(
+        sprintf('%s/app/cache', __DIR__),
+        sprintf('%s/app/logs', __DIR__),
+        sprintf('%s/web', __DIR__)
+    );
+    
+    foreach($paths as $path){
+        $cmd = sprintf('sudo chmod ugo+rw -R %s', $path);
+        passthru($cmd);
+    }

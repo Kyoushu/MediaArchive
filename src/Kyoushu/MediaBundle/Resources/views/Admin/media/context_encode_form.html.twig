@@ -1,0 +1,10 @@
+{% extends 'KyoushuMediaBundle:Default:base.html.twig' %}
+
+{% block content %}
+    
+    <h2>Encode Media</h2>
+    
+    {% form_theme form 'KyoushuMediaBundle:Form:form.html.twig' %}
+    {{ form(form) }}
+    
+{% endblock %}

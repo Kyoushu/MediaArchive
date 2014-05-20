@@ -1,0 +1,22 @@
+{% extends 'KyoushuMediaBundle:Default:base.html.twig' %}
+
+{% block content %}
+    
+    {% block admin_header %}
+        <h2>Admin <small>Edit {{ definition.humanName }}</small></h2>
+    {% endblock admin_header %}
+    
+    {% block admin_breadcrumbs %}
+        <ul class="breadcrumbs">
+            <li><a href="{{ path('kyoushu_media_admin') }}">Admin</a></li>
+            <li><a href="{{ path('kyoushu_media_admin_list', {'entityName': definition.name}) }}">{{ definition.humanNamePlural }}</a></li>
+            <li><a href="{{ path('kyoushu_media_admin_edit', {'entityName': definition.name, 'id': entity.id}) }}">Edit {{ definition.humanName }}</a></li>
+        </ul>
+    {% endblock admin_breadcrumbs %}
+    
+    {% block admin_content %}
+        {% form_theme form 'KyoushuMediaBundle:Form:form.html.twig' %}
+        {{ form(form) }}
+    {% endblock admin_content %}
+    
+{% endblock %}

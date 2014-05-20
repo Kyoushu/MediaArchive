@@ -1,0 +1,27 @@
+{% import 'KyoushuMediaBundle:Macros:embed.html.twig' as embed %}
+
+{% if large_columns is not defined %}
+    {% set large_columns = 4 %}
+{% endif %}
+    
+{% if medium_columns is not defined %}
+    {% set medium_columns = 6 %}
+{% endif %}
+    
+{% if small_columns is not defined %}
+    {% set small_columns = 12 %}
+{% endif %}
+
+<div class="row media-list">
+    {% for media in media_set %}
+        
+        {% include 'KyoushuMediaBundle:TvShow:episode_list_column.html.twig' with {
+            'media': media,
+            'loop': loop,
+            'large_columns': large_columns,
+            'medium_columns': medium_columns,
+            'small_columns': small_columns
+        } %}
+
+    {% endfor %}
+</div>

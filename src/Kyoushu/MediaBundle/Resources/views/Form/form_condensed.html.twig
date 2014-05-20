@@ -1,0 +1,24 @@
+{% extends 'KyoushuMediaBundle:Form:form.html.twig' %}
+
+{% block form_rows %}
+    
+    {% set visible_children = [] %}
+    
+    {% for child in form if
+        'hidden' not in child.vars.block_prefixes and
+        'button' not in child.vars.block_prefixes
+    %}
+        {% set visible_children = visible_children|merge([child]) %}
+    {% endfor %}
+    
+    {% for child_row in visible_children|batch(3) %}
+        <div class="row">
+            {% for child in child_row %}
+                <div class="large-4 columns{{ loop.last ? ' end' }}">
+                    {{ form_row(child) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    
+{% endblock %}

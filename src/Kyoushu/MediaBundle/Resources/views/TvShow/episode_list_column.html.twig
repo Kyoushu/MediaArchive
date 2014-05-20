@@ -1,0 +1,12 @@
+{% extends 'KyoushuMediaBundle:Media:list_column.html.twig' %}
+
+{% block media_name %}
+    
+    {% if media.seasonNumber and media.episodeNumber %}
+        <div>{{ media.name }}</div>
+        <small>Season {{ media.seasonNumber }}, Episode {{ media.episodeNumber }}</small>
+    {% else %}
+        <div>{{ media.releaseDate|date('jS F Y') }}</div>
+    {% endif %}
+    
+{% endblock %}

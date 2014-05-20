@@ -1,0 +1,109 @@
+{% macro attributes(attrs) -%}
+    {%- for key, value in attrs %}{{ not loop.first ? ' ' }}{{ key }}="{{ value }}"{%- endfor -%}
+{%- endmacro %}
+
+{% macro image(path, columns, attrs) %}
+    {%- spaceless %}
+        
+        {% if columns is empty %}
+            {% set columns = 4 %}
+        {% endif %}
+        
+        {% if attrs is empty %}
+            {% set attrs = {} %}
+        {% endif %}
+    
+        {% set path_large = path|apply_filter('columns_' ~ columns ~ '_large') %}
+        {% set path_medium = path|apply_filter('columns_' ~ columns ~ '_large') %}
+        {% set path_small = path|apply_filter('columns_all_small') %}
+    
+        {% set default_attrs = {
+            'data-interchange': '[' ~ path_large ~ ', (default)], [' ~ path_large ~ ', (large)], [' ~ path_medium ~ ', (medium)], [' ~ path_small ~ ', (small)]'
+        } %}
+        
+        {% set attrs = default_attrs|merge(attrs) %}
+    
+        <img {{ _self.attributes(attrs) }} />
+    
+    {% endspaceless -%}
+{% endmacro %}
+
+{% macro video(path, attrs) %}
+    {%- spaceless %}
+    
+        {% if attrs is empty %}
+            {% set attrs = {} %}
+        {% endif %}
+
+        {% set default_attrs = {
+            'id': 'video-' ~ (random(8999) + 1000),
+            'src': path,
+            'width': '100%',
+        } %}
+
+        {% set attrs = default_attrs|merge(attrs) %}
+
+        <div data-video-player class="video-player">
+            <div class="row video-video">
+                <div class="large-12 columns">
+                    <video {{ _self.attributes(attrs) }} /></video>
+                </div>
+            </div>
+            <div class="row video-controls" data-video-controls="{{ attrs.id }}">
+                <div class="small-5 medium-4 large-3 columns">
+                    
+                    <ul class="small-block-grid-3">
+                        <li>
+                            <a data-video-control-play href="#" class="button">
+                                <i class="fa fa-play"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-video-control-pause href="#" class="button disabled">
+                                <i class="fa fa-pause"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-video-control-fullscreen href="#" class="button disabled">
+                                <i class="fa fa-arrows-alt"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                </div>
+                <div class="small-7 medium-6 large-7 columns">
+                    <div class="range-slider" data-slider="0" data-video-control-seek>
+                        <span class="range-slider-handle" style="display: none;"></span>
+                        <span class="range-slider-active-segment"></span>
+                    </div>
+                </div>
+                <div class="hide-for-small medium-2 large-2 columns text-center">
+                    <div class="button disabled" data-video-control-time>0:00</div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    {% endspaceless -%}
+{% endmacro %}
+    
+{% macro media(media, attrs) %}
+    {%- spaceless %}
+    
+        {% if attrs is empty %}
+            {% set attrs = {} %}
+        {% endif %}
+    
+        {% set default_attrs = {
+            'id': 'media-video-' ~ media.id,
+            'data-media-id': media.id,
+            'poster': media.screencapPath|apply_filter('columns_12_large')
+        } %}
+    
+        {% set attrs = default_attrs|merge(attrs) %}
+    
+        {{ _self.video(media.webPath, attrs) }}
+        
+    {% endspaceless -%}
+{% endmacro %}

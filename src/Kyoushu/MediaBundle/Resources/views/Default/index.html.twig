@@ -1,0 +1,9 @@
+{% extends 'KyoushuMediaBundle:Default:base.html.twig' %}
+
+{% block content %}
+    
+    <h2>Latest Episodes</h2>
+    
+    {% include 'KyoushuMediaBundle:Media:list.html.twig' with {'media_set': media_set} %}
+    
+{% endblock %}

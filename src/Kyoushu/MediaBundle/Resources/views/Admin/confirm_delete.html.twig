@@ -1,0 +1,26 @@
+{% extends 'KyoushuMediaBundle:Default:base.html.twig' %}
+
+{% block content %}
+    
+    {% block admin_header %}
+        <h2>Admin <small>Delete {{ definition.humanName }}</small></h2>
+    {% endblock admin_header %}
+    
+    {% block admin_breadcrumbs %}
+        <ul class="breadcrumbs">
+            <li><a href="{{ path('kyoushu_media_admin') }}">Admin</a></li>
+            <li><a href="{{ path('kyoushu_media_admin_list', {'entityName': definition.name}) }}">{{ definition.humanNamePlural }}</a></li>
+            <li><a href="{{ path('kyoushu_media_admin_delete', {'entityName': definition.name, 'id': entity.id}) }}">Delete {{ definition.humanName }}</a></li>
+        </ul>
+    {% endblock admin_breadcrumbs %}
+    
+    {% block admin_content %}
+        <p>Are you sure you want to delete this entity?</p>
+    
+        <ul class="button-group">
+            <li><a href="{{ path('kyoushu_media_admin_delete', {'entityName': definition.name, 'id': entity.id, 'confirm': 'confirm'}) }}" class="button alert">Yes</a></li>
+            <li><a href="{{ path('kyoushu_media_admin_list', {'entityName': definition.name}) }}" class="button">No</a></li>
+        </ul>
+    {% endblock admin_content %}
+    
+{% endblock %}

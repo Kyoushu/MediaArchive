@@ -1,0 +1,31 @@
+{% if large_columns is not defined %}
+    {% set large_columns = 4 %}
+{% endif %}
+    
+{% if medium_columns is not defined %}
+    {% set medium_columns = 4 %}
+{% endif %}
+    
+{% if small_columns is not defined %}
+    {% set small_columns = 4 %}
+{% endif %}
+
+<div class="large-{{ large_columns }} medium-{{ medium_columns }} small-{{ small_columns }} columns{{ loop is defined and loop.last ? ' end' }}">
+    <a href="{{ path('kyoushu_media_watch', {'mediaId': media.id}) }}">
+        {{ embed.image(media.screencapWebPath, 4) }}
+        <div class="media-list--name">
+            <div class="media-list--name-inner">
+                {% block media_name %}
+
+                    {% if media.category == 'tv' %}
+                        <div>{{ media.tvShow.name }}</div>
+                        <small>Season {{ media.seasonNumber }}, Episode {{ media.episodeNumber }}</small>
+                    {% else %}
+                        {{ media.name }}
+                    {% endif %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </a>
+</div>

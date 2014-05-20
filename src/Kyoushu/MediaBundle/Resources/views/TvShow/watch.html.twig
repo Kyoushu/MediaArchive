@@ -1,0 +1,53 @@
+{% extends 'KyoushuMediaBundle:TvShow:base.html.twig' %}
+
+{% set episode_sequence = null %}
+{% if episode.seasonNumber and episode.episodeNumber %}
+    {% set episode_sequence = ('Season ' ~ episode.seasonNumber ~ ', Episode ' ~ episode.episodeNumber) %}
+{% elseif episode.releaseDate %}
+    {% set episode_sequence = (episode.releaseDate|date('jS F Y')) %}
+{% endif %}
+
+{% import 'KyoushuMediaBundle:Macros:embed.html.twig' as embed %}
+
+{% block tv_show_breadcrumbs_extra %}
+    {% if episode.name %}
+        <li><a href="{{ path('kyoushu_media_tvshow_watch', {'tvShowSlug': show.slug, 'mediaId': episode.id, 'mediaNameSlug': episode.nameSlug}) }}">{{ episode.name }}</a></li>
+    {% else %}
+        <li><a href="{{ path('kyoushu_media_tvshow_watch', {'tvShowSlug': show.slug, 'mediaId': episode.id, 'mediaNameSlug': episode.nameSlug}) }}">{{ episode.releaseDate|date('jS F Y') }}</a></li>
+    {% endif %}
+    
+{% endblock %}
+
+{% block tv_show_content %}
+    
+    {% if episode.name %}
+        <h3>{{ episode.name }}{% if episode_sequence %} <small>{{ episode_sequence }}</small>{% endif %}</h3>
+    {% else %}
+        <h3>{{ episode.releaseDate|date('jS F Y') }}</h3>
+    {% endif %}
+    
+    <div class="row">
+        <div class="large-8 columns">
+            {{ embed.media(episode) }}            
+        </div>
+        <div class="large-4 columns">
+            
+            {% include 'KyoushuMediaBundle:TvShow:episode_list.html.twig' with {
+                'media_set': more_episodes,
+                'large_columns': 12,
+                'medium_columns': 6,
+                'small_columns': 12
+            } %}
+            
+        </div>
+    </div>
+            
+    {% if episode.description %}
+        <hr/>
+        <h4>Episode Summary</h4>
+        <div class="panel">
+            <p>{{ episode.description }}</p>
+        </div>
+    {% endif %}
+    
+{% endblock %}

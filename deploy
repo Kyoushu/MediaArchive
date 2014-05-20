@@ -1,0 +1,101 @@
+#!/usr/bin/env php
+<?php
+
+$environment = (in_array('--env=prod', $argv) ? 'prod' : 'dev');
+
+echo sprintf("[deploy] running in %s mode\n", $environment);
+
+$tasks = array(
+    array(
+        'environments' => array('dev', 'prod'),
+        'description' => 'Fix permissions (pre-update)',
+        'command' => './fix-permissions'
+    ),
+    array(
+        'environments' => array('prod'),
+        'description' => 'Git pull',
+        'command' => 'git pull'
+    ),
+    array(
+        'environments' => array('prod', 'dev'),
+        'description' => 'Download composer.phar',
+        'command' => 'curl -sS https://getcomposer.org/installer | php',
+        'hide_output' => true,
+        'condition' => function(){
+            return !file_exists('composer.phar');
+        }
+    ),
+    array(
+        'environments' => array('prod'),
+        'description' => 'Composer install (non-interactive)',
+        'command' => './composer.phar install -n'
+    ),
+    array(
+        'environments' => array('dev'),
+        'description' => 'Composer install (interactive)',
+        'command' => './composer.phar install'
+    ),
+    array(
+        'environments' => array('prod', 'dev'),
+        'description' => 'Clear prod cache',
+        'command' => 'app/console cache:clear --env=prod'
+    ),
+    array(
+        'environments' => array('prod'),
+        'description' => 'Clear dev cache',
+        'command' => 'app/console cache:clear --env=dev'
+    ),
+    array(
+        'environments' => array('dev'),
+        'description' => 'Clear dev cache',
+        'command' => 'app/console cache:clear --env=dev'
+    ),
+    array(
+        'environments' => array('dev', 'prod'),
+        'description' => 'Update database schema',
+        'command' => 'app/console doctrine:schema:update --force'
+    ),
+    array(
+        'environments' => array('dev', 'prod'),
+        'description' => 'Install assets',
+        'command' => 'app/console assets:install web --symlink'
+    ),
+    array(
+        'environments' => array('dev', 'prod'),
+        'description' => 'Dump assets',
+        'command' => 'app/console assetic:dump --env=prod --no-debug'
+    ),   
+    array(
+        'environments' => array('dev', 'prod'),
+        'description' => 'Fix permissions (post-update)',
+        'command' => './fix-permissions'
+    ),
+);
+
+chdir(__DIR__); // Composer installer requires us to be in the project directory
+foreach($tasks as $task){
+    
+    if(isset($task['condition']) && !$task['condition']()){
+        continue;
+    }
+    
+    if(!in_array($environment, $task['environments'])){
+        continue;
+    }
+    
+    echo sprintf("[deploy] %s\n", $task['description']);
+    
+    if(isset($task['hide_output']) && $task['hide_output'] === true){
+        $output = array();
+        exec($task['command'], $output, $exitCode);
+    }
+    else{
+        passthru($task['command'], $exitCode);
+    }
+    
+    if($exitCode !== 0){
+        echo sprintf('[deploy] FAILED, exit code %s returned by last command', $exitCode);
+        exit($exitCode);
+    }
+    
+}

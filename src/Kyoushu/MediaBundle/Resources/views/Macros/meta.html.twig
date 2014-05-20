@@ -1,0 +1,4 @@
+{% macro title(title_text) -%}
+    Media Browser
+    {%- if title_text is not empty %} | {{ title_text}}{% endif -%}
+{%- endmacro %}

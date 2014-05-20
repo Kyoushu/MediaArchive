@@ -1,0 +1,145 @@
+{% extends 'KyoushuFoundationBundle:Form:form.html.twig' %}
+
+{% block form_start %}
+{% spaceless %}
+    {% set method = method|upper %}
+    {% if method in ["GET", "POST"] %}
+        {% set form_method = method %}
+    {% else %}
+        {% set form_method = "POST" %}
+    {% endif %}
+    <form name="{{ form.vars.name }}" method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %} novalidate>
+    {% if form_method != method %}
+        <input type="hidden" name="_method" value="{{ method }}" />
+    {% endif %}
+{% endspaceless %}
+{% endblock form_start %}
+
+{% block datetime_widget %}
+{% spaceless %}
+    {% if widget == 'single_text' %}
+        {{ block('form_widget_simple') }}
+    {% else %}
+        <div class="row">
+            <div class="large-7 medium-12 columns">
+                {{ form_widget(form.date) }}
+                {{ form_errors(form.date) }}
+            </div>
+            <div class="large-5 medium-12 columns">
+                {{ form_widget(form.time) }}
+                {{ form_errors(form.time) }}  
+            </div>
+        </div>
+    {% endif %}
+{% endspaceless %}
+{% endblock datetime_widget %}
+
+{% block admin_media_encode_job_row %}
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block collection_row %}
+    
+    {% set child_start = '<div data-collection-child><div class="panel">' %}
+    {% set child_end = (allow_delete ? '<a data-collection-remove href="#" class="button small">Remove</a>') ~ '</div></div>' %}
+        
+    {% set wrapped_prototype = ( prototype is defined ? child_start ~ form_row(prototype) ~ child_end : '') %}
+    
+    <div class="row" data-collection data-collection-prototype="{{ wrapped_prototype|raw|escape('html_attr') }}">
+        <div class="large-12 columns">
+            
+            <hr />
+            
+            {% if label is not empty %}
+                <h4>{{ label }}</h4>
+            {% endif %}
+                
+            <div data-collection-children>
+                {% for child in form %}
+                    {{ child_start|raw }}
+                        {{ form_row(child) }}
+                    {{ child_end|raw }}
+                {% endfor %}
+            </div>
+                
+            {% if allow_add %}
+                <a href="#" data-collection-add class="button small">Add</a>
+            {% endif %}
+                
+            <hr />
+            
+        </div>
+    </div>
+{% endblock collection_row %}
+    
+{% block entity_autocomplete_widget %}
+    
+    {%
+        set widget_options = {
+            'entityClass': form.vars.class,
+            'searchProperties': form.vars.search_properties,
+            'property': form.vars.property
+        }
+    %}
+    
+    {% if form.vars.data is not null %}
+        {% set property_value = (form.vars.property is null ? form.vars.data : attribute(form.vars.data, form.vars.property)) %}
+        {% set data_id = form.vars.data.id %}
+    {% else %}
+        {% set property_value = null %}
+        {% set data_id = null %}
+    {% endif %}
+        
+    <div class="row collapse{{ form.vars.errors|length > 0 ? ' error' }}" data-entity-autocomplete="{{ widget_options|json_encode|escape('html_attr') }}">
+        
+        <div class="small-2 columns">
+            <span class="prefix" data-entity-autocomplete-id>{{ data_id }}</span>
+        </div>
+        <div class="small-10 columns">
+            
+            <input type="text" data-dropdown="drop_{{ id }}" data-entity-autocomplete-search placeholder="{{ property_value }}" />
+            <input type="hidden" data-entity-autocomplete-value id="{{ id }}" name="{{ full_name }}" value="{{ value }}" />
+            
+        </div>
+        
+        <div style="display: none;" class="large-12 columns end" data-entity-autocomplete-suggestions ></div>
+            
+    </div>
+    
+{% endblock entity_autocomplete_widget %}
+    
+{% block button_widget %}
+{% spaceless %}
+    {% if label is empty %}
+        {% set label = name|humanize %}
+    {% endif %}
+        
+    {% if 'submit' in form.vars.block_prefixes %}
+        {% set element_type = 'button' %}
+    {% else %}
+        {% set element_type = 'a' %}
+    {% endif %}
+    
+        
+    <{{ element_type }} {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</{{ element_type }}>
+{% endspaceless %}
+{% endblock button_widget %}
+    
+{% block button_attributes %}
+    
+{% set attr = attr|merge({'class': attr.class|default('') ~ ' button' }) %}
+    
+{% spaceless %}
+    id="{{ id }}" name="{{ full_name }}"{% if disabled %} disabled="disabled"{% endif -%}
+    {%- for attrname, attrvalue in attr -%}
+        {{- " " -}}
+        {%- if attrname in ['placeholder', 'title'] -%}
+            {{- attrname }}="{{ attrvalue|trans({}, translation_domain) }}"
+        {%- elseif attrvalue is sameas(true) -%}
+            {{- attrname }}="{{ attrname }}"
+        {%- elseif attrvalue is not sameas(false) -%}
+            {{- attrname }}="{{ attrvalue }}"
+        {%- endif -%}
+    {%- endfor -%}
+{% endspaceless %}
+{% endblock button_attributes %}

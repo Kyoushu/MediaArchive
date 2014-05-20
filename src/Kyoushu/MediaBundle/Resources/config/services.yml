@@ -1,0 +1,93 @@
+parameters:
+#    kyoushu_media.example.class: Kyoushu\MediaBundle\Example
+
+services:
+#    kyoushu_media.example:
+#        class: %kyoushu_media.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+        
+    kyoushu_media.scanner:
+        class: Kyoushu\MediaBundle\MediaScanner\Scanner
+        arguments: ['@doctrine.orm.entity_manager']
+           
+    kyoushu_media.processor:
+        class: Kyoushu\MediaBundle\MediaScanner\Processor
+        arguments: ['@doctrine.orm.entity_manager', '@kyoushu_media.tvdb']
+        
+    kyoushu_media.tvdb:
+        class: Moinax\TvDb\Client
+        arguments: ['%tvdb_base_url%', '%tvdb_api_key%']
+        
+    kyoushu_media.encoder_manager:
+        class: Kyoushu\MediaBundle\MediaEncoder\Manager
+        arguments: ['%kernel.root_dir%', '%kernel.environment%']
+        
+    kyoushu_media.encoder.avconv:
+        class: Kyoushu\MediaBundle\MediaEncoder\Encoder\AvconvEncoder
+        tags:
+            - { name: kyoushu_media.encoder, alias: avconv }
+            
+    kyoushu_media.admin.entity_registry:
+        class: Kyoushu\MediaBundle\Admin\EntityRegistry
+        arguments: ['@doctrine.orm.entity_manager']
+        
+    kyoushu_media.form.type.annotation_reader:
+        class: Kyoushu\MediaBundle\Form\Type\AnnotationReaderType
+        tags:
+            - { name: form.type, alias: annotation_reader }
+            
+    kyoushu_media.form.type.encoder_profile:
+        class: Kyoushu\MediaBundle\Form\Type\EncoderProfileType
+        arguments: ['@kyoushu_media.encoder_manager']
+        tags:
+            - { name: form.type, alias: encoder_profile }
+        
+    kyoushu_media.form.type.media_encode_job_status:
+        class: Kyoushu\MediaBundle\Form\Type\MediaEncodeJobStatusType
+        tags:
+            - { name: form.type, alias: media_encode_job_status }
+            
+    kyoushu_media.form.type.tv_show:
+        class: Kyoushu\MediaBundle\Form\Type\TvShowType
+        tags:
+            - { name: form.type, alias: tv_show }
+            
+    kyoushu_media.form.type.media_category:
+        class: Kyoushu\MediaBundle\Form\Type\MediaCategoryType
+        tags:
+            - { name: form.type, alias: media_category }
+            
+    kyoushu_media.form.type.media_source:
+        class: Kyoushu\MediaBundle\Form\Type\MediaSourceType
+        tags:
+            - { name: form.type, alias: media_source }
+            
+    kyoushu_media.form.type.media:
+        class: Kyoushu\MediaBundle\Form\Type\MediaType
+        tags:
+            - { name: form.type, alias: media }
+            
+    kyoushu_media.form.type.entity_table_wrapper:
+        class: Kyoushu\MediaBundle\Form\Type\EntityTableWrapperType
+        tags:
+            - { name: form.type, alias: entity_table_wrapper }
+            
+    kyoushu_media.form.type.entity_table_context:
+        class: Kyoushu\MediaBundle\Form\Type\EntityTableContextType
+        tags:
+            - { name: form.type, alias: entity_table_context }
+            
+    kyoushu_media.form.type.entity_autocomplete:
+        class: Kyoushu\MediaBundle\Form\Type\EntityAutocompleteType
+        tags:
+            - { name: form.type, alias: entity_autocomplete }
+            
+    kyoushu_media.finder_factory:
+        class: Kyoushu\MediaBundle\Finder\Factory
+        arguments: ['@doctrine.orm.entity_manager']
+        
+    kyoushu_media.doctrine_event_subscriber:
+        class: Kyoushu\MediaBundle\EventListener\DoctrineEventSubscriber
+        arguments: ['%kernel.root_dir%']
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }

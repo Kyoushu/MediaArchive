@@ -1,0 +1,263 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+
+framework:
+    #esi:             ~
+    #translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        # handler_id set to null will use default session handler from php.ini
+        handler_id:  ~
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+
+# Assetic Configuration
+assetic:
+    debug:          "%kernel.debug%"
+    use_controller: false
+    bundles:        [ 'KyoushuMediaBundle' ]
+    filters:
+        cssrewrite: ~
+        scssphp:
+            import_paths: ["%kernel.root_dir%/../src/Kyoushu/MediaBundle/Resources/scss"]
+        yui_css:
+            jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.8.jar"
+        yui_js:
+            jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.8.jar"
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        # if using pdo_sqlite as your database driver, add the path in parameters.yml
+        # e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        # path:     "%database_path%"
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_mapping: true
+        
+stof_doctrine_extensions:
+    default_locale: en_GB
+    orm:
+        default:
+            sluggable: true
+            timestampable: true
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
+    
+kyoushu_media:
+    web_root_dir: "%kernel.root_dir%/../web"
+    screencap_root_dir: "%kernel.root_dir%/../web/screencaps"
+    screencap_offset: 300
+    encoder:
+        temp_dir: "%kernel.root_dir%/../app/cache/%kernel.environment%/kyoushu_media/encode"
+        default_encoder: avconv
+        profiles:
+            hd:
+                container: mp4
+                video_codec: h264
+                video_bitrate: 3000k
+                audio_codec: aac
+                max_height: 720
+            #sd:
+            #    container: mp4
+            #    video_codec: h264
+            #    audio_codec: aac
+            #    audio_bitrate: 160k
+            #    video_bitrate: 1500k
+            #    max_height: 480
+    admin:
+        entities:
+            media_encode_job:
+                class: Kyoushu\MediaBundle\Entity\MediaEncodeJob
+                name_property: id
+                list_table_class: Kyoushu\MediaBundle\Table\Type\AdminListMediaEncodeJobType
+                #list_view: KyoushuMediaBundle:Admin:media_encode_job/list.html.twig
+                list_finder_filters:
+                    status:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: status
+                        form_type: media_encode_job_status
+                        
+                    profile:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: encoderProfileName
+                        form_type: encoder_profile
+                        form_options:
+                            empty_value: ''
+                
+            media_source:
+                class: Kyoushu\MediaBundle\Entity\MediaSource
+                name_property: name
+                list_table_class: Kyoushu\MediaBundle\Table\Type\AdminListMediaSourcesType
+                list_finder_filters:
+                    encoder_destination:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: encoderDestination
+                        form_type: choice
+                        form_options:
+                            empty_value: ''
+                            choices:
+                                1: Yes
+                                0: No
+                    private:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: private
+                        form_type: choice
+                        form_options:
+                            empty_value: ''
+                            choices:
+                                1: Yes
+                                0: No
+                
+            media:
+                class: Kyoushu\MediaBundle\Entity\Media
+                name_property: id
+                list_table_class: Kyoushu\MediaBundle\Table\Type\AdminListMediaType
+                list_context_forms:
+                    encode:
+                        route: kyoushu_media_admin_list_context_encode_media
+                        button_label: Encode Selected
+                        form_class: Kyoushu\MediaBundle\Form\Type\AdminEncodeMediaTableContextType
+                list_finder_filters:
+                    source:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: source
+                        form_type: media_source
+                    release_date:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: releaseDate
+                        form_type: birthday
+                        form_options:
+                            empty_value: ''
+                    tv_show:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: tvShow
+                        form_type: tv_show
+                        form_options:
+                            empty_value: ''
+                    season:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: seasonNumber
+                        form_type: number
+                        
+                    episode:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: episodeNumber
+                        form_type: number
+                        
+                    category:
+                        class: Kyoushu\MediaBundle\Finder\Filter\EqualsFilter
+                        property: category
+                        form_type: media_category
+                
+            tv_show:
+                class: Kyoushu\MediaBundle\Entity\TvShow
+                name_property: name
+                list_finder_filters:
+                    name:
+                        class: Kyoushu\MediaBundle\Finder\Filter\KeywordFilter
+                        property: name
+                        form_type: text
+                
+    symlink_assets:
+        font.open_sans:
+            source: "%kernel.root_dir%/../vendor/font-face-kit/open-sans/fonts"
+            destination: "%kernel.root_dir%/../web/fonts/open-sans"
+        font.font_awesome:
+            source: "%kernel.root_dir%/../vendor/fortawesome/font-awesome/fonts"
+            destination: "%kernel.root_dir%/../web/fonts/font-awesome"
+                
+kyoushu_foundation:
+    force_rebuild_stylesheets: true
+
+avalanche_imagine:
+    filters:
+        
+        # http://fiddle.jshell.net/WqU7p/7/show/light/
+        # {"filterPrefix":"columns","aspectRatio":1.777,"columns":[1,2,3,4,5,6,7,8,9,10,11,12],"containerWidths":{"small":640,"large":1000}}
+
+        columns_all_small:
+            type: thumbnail
+            options: { size: [640, 360], mode: outbound }
+
+        columns_1_large:
+            type: thumbnail
+            options: { size: [83, 47], mode: outbound }
+
+        columns_2_large:
+            type: thumbnail
+            options: { size: [167, 94], mode: outbound }
+
+        columns_3_large:
+            type: thumbnail
+            options: { size: [250, 141], mode: outbound }
+
+        columns_4_large:
+            type: thumbnail
+            options: { size: [333, 187], mode: outbound }
+
+        columns_5_large:
+            type: thumbnail
+            options: { size: [417, 235], mode: outbound }
+
+        columns_6_large:
+            type: thumbnail
+            options: { size: [500, 281], mode: outbound }
+
+        columns_7_large:
+            type: thumbnail
+            options: { size: [583, 328], mode: outbound }
+
+        columns_8_large:
+            type: thumbnail
+            options: { size: [667, 375], mode: outbound }
+
+        columns_9_large:
+            type: thumbnail
+            options: { size: [750, 422], mode: outbound }
+
+        columns_10_large:
+            type: thumbnail
+            options: { size: [833, 469], mode: outbound }
+
+        columns_11_large:
+            type: thumbnail
+            options: { size: [917, 516], mode: outbound }
+
+        columns_12_large:
+            type: thumbnail
+            options: { size: [1000, 563], mode: outbound }
+
+        

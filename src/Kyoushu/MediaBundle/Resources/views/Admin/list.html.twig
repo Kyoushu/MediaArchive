@@ -1,0 +1,46 @@
+{% extends 'KyoushuMediaBundle:Default:base.html.twig' %}
+
+{% block content %}
+    
+    {% block admin_header %}
+        <h2>Admin <small>{{ definition.humanName }}</small></h2>
+    {% endblock admin_header %}
+
+    {% block admin_breadcrumbs %}
+        <ul class="breadcrumbs">
+            <li><a href="{{ path('kyoushu_media_admin') }}">Admin</a></li>
+            <li><a href="{{ path('kyoushu_media_admin_list', {'entityName': definition.name}) }}">{{ definition.humanNamePlural }}</a></li>
+        </ul>
+    {% endblock admin_breadcrumbs %}
+    
+    {% block admin_content %}
+        
+        {% block admin_filter_form %}
+            {% if filter_form %}
+                <div class="panel">
+                    {% form_theme filter_form 'KyoushuMediaBundle:Form:form_condensed.html.twig' %}
+                    {{ form(filter_form) }}
+                </div>
+            {% endif %}
+        {% endblock %}
+        
+        {% block admin_create_controls %}
+            <a href="{{ path('kyoushu_media_admin_edit', {'entityName': definition.name}) }}" class="button tiny">Create {{ definition.humanName }}</a>
+        {% endblock admin_create_controls %}
+    
+        {% include 'KyoushuMediaBundle:Admin:pager.html.twig' with {'pager': pager} %}
+        {% include 'KyoushuMediaBundle:Table:table.html.twig' with {'table': table} %}
+        {% include 'KyoushuMediaBundle:Admin:pager.html.twig' with {'pager': pager} %}
+        
+        {% for reveal_id, context_form in context_forms %}
+            
+            <div id="{{ reveal_id }}" class="reveal-modal" data-reveal>
+                {% form_theme context_form 'KyoushuMediaBundle:Form:form.html.twig' %}
+                {{ form(context_form) }}
+            </div>
+            
+        {% endfor %}
+        
+    {% endblock admin_content %}
+    
+{% endblock %}

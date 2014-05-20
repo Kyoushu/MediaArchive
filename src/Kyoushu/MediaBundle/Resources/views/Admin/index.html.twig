@@ -1,0 +1,19 @@
+{% extends 'KyoushuMediaBundle:Default:base.html.twig' %}
+
+{% block content %}
+    
+    {% block admin_header %}
+        <h2>Admin</h2>
+    {% endblock admin_header %}
+    
+    {% block admin_breadcrumbs %}
+        <ul class="breadcrumbs">
+            <li><a href="{{ path('kyoushu_media_admin') }}">Admin</a></li>
+        </ul>
+    {% endblock admin_breadcrumbs %}
+    
+    {% block admin_content %}
+        {% include 'KyoushuMediaBundle:Table:table.html.twig' with {'table': table} %}
+    {% endblock admin_content %}
+    
+{% endblock %}

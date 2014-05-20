@@ -1,0 +1,10 @@
+$OpenSansPath: "/fonts/open-sans";
+@import "../../../../../vendor/font-face-kit/open-sans/open-sans.scss";
+
+$fa-font-path: "/fonts/font-awesome";
+@import "../../../../../vendor/fortawesome/font-awesome/scss/font-awesome.scss";
+
+@import "media/settings";
+@import "foundation";
+@import "media/styles";
+@import "media/video_player";

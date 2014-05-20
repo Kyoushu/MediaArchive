@@ -1,0 +1,99 @@
+{% if table.hasFormWrapper %}
+    {% set form_wrapper = table.createFormWrapperView %}
+    {% form_theme form_wrapper 'KyoushuMediaBundle:Form:table_form_wrapper.html.twig' %}
+{% endif %}
+
+{% block table_form_wrapper_start %}
+    {% if table.hasFormWrapper %}    
+        {{ form_start(form_wrapper) }}
+        
+        <div class="row">
+            <div class="large-12 columns text-right">
+                {% for child in form_wrapper if 'collection' not in child.vars.block_prefixes %}
+                    {{ form_widget(child) }}
+                {% endfor %}
+            </div>
+        </div>
+        
+        
+    {% endif %}
+{% endblock table_form_wrapper_start %}
+
+{% block table_start %}
+    <table>
+{% endblock table_start %}
+
+    {% block thead %}
+        <thead>
+            {% block thead_tr %}
+                <tr>
+                    
+                {% if table.hasFormWrapper %}
+                    <th class="table--checkbox">&nbsp;</th>
+                {% endif %}
+                    
+                {% for column_name, column in table.columns %}
+                    
+                    {% if column.type == 'control' %}
+                        {% block th_control %}
+                            <th class="table--control">&nbsp;</th>
+                        {% endblock %}
+                    {% else %}
+                        {% block th_default %}
+                            <th class="table--{{ column.type }}">{{ column.label }}</th>
+                        {% endblock th_default %}
+                    {% endif %}
+                    
+                {% endfor %}
+                </tr>
+            {% endblock thead_tr %}
+        </thead>
+    {% endblock thead %}
+    
+    {% block tbody %}
+        <tbody>
+            {% for row in table.data %}
+                {% block tbody_tr %}
+                    <tr>
+                        
+                        {% if table.hasFormWrapper %}
+                            {% set checkbox = attribute(form_wrapper.selectedIds.children, row.id) %}
+                            <td class="table--checkbox">
+                                {{ form_widget(checkbox) }}
+                            </td>
+                        {% endif %}
+                        
+                        {% for column_name, column in table.columns %}
+                            
+                            {% if column.type == 'control' %}
+                                {% block td_control %}
+                                    <td class="table--control">
+                                        {% if column.visible(row) %}
+                                            <a href="{{ path(column.route, column.parameters(row)) }}" class="button tiny">{{ column.label }}</a>
+                                        {% endif %}
+                                    </td>
+                                {% endblock %}
+                            {% else %}
+                                {% block td_default %}
+                                    <td class="table--{{ column.type }}">{{ column.value(row) }}</td>
+                                {% endblock %}
+                            {% endif %}
+                            
+                            
+                        {% endfor %}
+                    </tr>
+                {% endblock tbody_tr %}
+            {% endfor %}
+        </tbody>
+    {% endblock tbody %}
+    
+
+{% block table_end %}
+    </table>
+{% endblock table_end %}
+
+{% block table_form_wrapper_end %}
+    {% if table.hasFormWrapper %}
+        {{ form_end(form_wrapper) }}
+    {% endif %}
+{% endblock table_form_wrapper_end %}

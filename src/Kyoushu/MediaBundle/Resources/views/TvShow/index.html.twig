@@ -1,0 +1,20 @@
+{% extends 'KyoushuMediaBundle:TvShow:base.html.twig' %}
+
+{% import 'KyoushuMediaBundle:Macros:embed.html.twig' as embed %}
+
+{% block tv_show_content %}
+    
+    <div class="panel">
+        <p>{{ show.description }}</p>
+    </div>
+    
+    <a href="#" data-dropdown="season" class="button dropdown">Season {{ seasonNumber }}</a><br>
+    <ul id="season" data-dropdown-content class="f-dropdown">    
+        {% for seasonNumberChoice in seasonNumbers %}
+            <li><a href="{{ path('kyoushu_media_tvshow', {'tvShowSlug': show.slug, 'seasonNumber': seasonNumberChoice}) }}">Season {{ seasonNumberChoice }}</a></li>
+        {% endfor %}
+    </ul>
+    
+    {% include 'KyoushuMediaBundle:TvShow:episode_list.html.twig' with {'media_set': episodes, 'per_row': 1} %}    
+    
+{% endblock %}
