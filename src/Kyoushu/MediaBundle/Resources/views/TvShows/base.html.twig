@@ -1,0 +1,26 @@
+{% extends 'KyoushuMediaBundle:Default:base.html.twig' %}
+
+{% block content %}
+    
+    {% block tv_shows %}
+        
+        {% block tv_shows_header %}
+    
+            <h2>TV Shows</h2>
+
+            {% block tv_show_breadcrumbs %}
+                <ul class="breadcrumbs">
+                    <li><a href="{{ path('kyoushu_media_homepage') }}">Home</a></li>
+                    <li><a href="{{ path('kyoushu_media_tvshows') }}">TV Shows</a></li>
+                    {% block tv_shows_breadcrumbs_extra %}{% endblock %}
+                </ul>
+            {% endblock %}
+
+        {% endblock %}
+        
+        {% block tv_shows_content %}
+        {% endblock %}
+        
+    {% endblock %}
+    
+{% endblock %}

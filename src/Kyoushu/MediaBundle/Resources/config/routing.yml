@@ -69,7 +69,7 @@ kyoushu_media_tvshow_watch:
         mediaNameSlug: ~
         
 kyoushu_media_tvshows:
-    pattern: /tv/{tvShowNameFirstLetter}
+    pattern: /tv/{tvShowNameFirstChar}
     defaults:
         _controller: KyoushuMediaBundle:TvShow:index
-        tvShowNameFirstLetter: ~
+        tvShowNameFirstChar: ~

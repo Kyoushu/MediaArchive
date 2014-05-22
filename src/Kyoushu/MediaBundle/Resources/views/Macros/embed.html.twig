@@ -2,8 +2,12 @@
     {%- for key, value in attrs %}{{ not loop.first ? ' ' }}{{ key }}="{{ value }}"{%- endfor -%}
 {%- endmacro %}
 
-{% macro image(path, columns, attrs) %}
+{% macro image(path, columns, attrs, filter_prefix) %}
     {%- spaceless %}
+    
+        {% if filter_prefix is empty %}
+            {% set filter_prefix = 'columns' %}
+        {% endif %}
         
         {% if columns is empty %}
             {% set columns = 4 %}
@@ -13,9 +17,9 @@
             {% set attrs = {} %}
         {% endif %}
     
-        {% set path_large = path|apply_filter('columns_' ~ columns ~ '_large') %}
-        {% set path_medium = path|apply_filter('columns_' ~ columns ~ '_large') %}
-        {% set path_small = path|apply_filter('columns_all_small') %}
+        {% set path_large = path|apply_filter(filter_prefix ~ '_' ~ columns ~ '_large') %}
+        {% set path_medium = path|apply_filter(filter_prefix ~ '_' ~ columns ~ '_large') %}
+        {% set path_small = path|apply_filter(filter_prefix ~ '_all_small') %}
     
         {% set default_attrs = {
             'data-interchange': '[' ~ path_large ~ ', (default)], [' ~ path_large ~ ', (large)], [' ~ path_medium ~ ', (medium)], [' ~ path_small ~ ', (small)]'

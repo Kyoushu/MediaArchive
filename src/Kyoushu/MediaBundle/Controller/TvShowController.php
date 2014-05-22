@@ -7,7 +7,34 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class TvShowController extends Controller
 {
     
-    public function indexAction($tvShowNameFirstLetter){
+    public function indexAction($tvShowNameFirstChar){
+        
+        $chars = $this->getDoctrine()
+            ->getRepository('KyoushuMediaBundle:TvShow')
+            ->getNameFirstCharacters();
+        
+        if($tvShowNameFirstChar === null){
+            $tvShowNameFirstChar = null;
+            
+            $tvShows = $this->getDoctrine()
+                ->getRepository('KyoushuMediaBundle:TvShow')
+                ->createQueryBuilder('s')
+                ->orderBy('s.name', 'ASC')
+                ->getQuery()
+                ->getResult();
+            
+        }
+        else{
+            $tvShows = $this->getDoctrine()
+                ->getRepository('KyoushuMediaBundle:TvShow')
+                ->findByNameFirstCharacter($tvShowNameFirstChar);
+        }
+        
+        return $this->render('KyoushuMediaBundle:TvShows:index.html.twig', array(
+            'current_first_character' => $tvShowNameFirstChar,
+            'first_characters' => $chars,
+            'shows' => $tvShows
+        ));
         
     }
     

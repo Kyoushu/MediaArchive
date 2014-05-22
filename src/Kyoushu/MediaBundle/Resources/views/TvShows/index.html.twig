@@ -1,0 +1,25 @@
+{% extends 'KyoushuMediaBundle:TvShows:base.html.twig' %}
+
+{% import 'KyoushuMediaBundle:Macros:embed.html.twig' as embed %}
+
+{% block tv_shows_content %}
+    
+    <dl class="tabs" data-tab>
+        {% for first_character in first_characters %}
+        <dd class="{{ first_character == current_first_character ? 'active' }}">
+            <a href="{{ path('kyoushu_media_tvshows', {'tvShowNameFirstChar': first_character}) }}">{{ first_character }}</a>
+        </dd>
+        {% endfor %}
+    </dl>
+            
+    <div class="row">
+        {% for show in shows %}
+            <div class="large-3 columns{{ loop.last ? ' end' }}">
+                <a href="{{ path('kyoushu_media_tvshow', {'tvShowSlug': show.slug}) }}">
+                    {{ embed.image(show.posterWebPath, 3, null, 'posters') }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

@@ -11,7 +11,7 @@ use Kyoushu\MediaBundle\Form\Mapping as Form;
  * TvShow
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Kyoushu\MediaBundle\Entity\TvShowRepository")
  */
 class TvShow
 {

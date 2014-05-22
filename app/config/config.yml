@@ -201,7 +201,7 @@ kyoushu_media:
             destination: "%kernel.root_dir%/../web/fonts/font-awesome"
                 
 kyoushu_foundation:
-    force_rebuild_stylesheets: true
+    force_rebuild_stylesheets: false
 
 avalanche_imagine:
     filters:
@@ -270,5 +270,62 @@ avalanche_imagine:
         columns_12_large:
             type: thumbnail
             options: { size: [1000, 563], mode: outbound }
+            
+        # http://fiddle.jshell.net/WqU7p/7/show/light/
+        # {"filterPrefix":"posters","aspectRatio":0.64,"columns":[1,2,3,4,5,6,7,8,9,10,11,12],"containerWidths":{"small":640,"large":1000}}
+
+        posters_all_small:
+            type: thumbnail
+            options: { size: [640, 1000], mode: outbound }
+
+        posters_1_large:
+            type: thumbnail
+            options: { size: [83, 130], mode: outbound }
+
+        posters_2_large:
+            type: thumbnail
+            options: { size: [167, 261], mode: outbound }
+
+        posters_3_large:
+            type: thumbnail
+            options: { size: [250, 391], mode: outbound }
+
+        posters_4_large:
+            type: thumbnail
+            options: { size: [333, 520], mode: outbound }
+
+        posters_5_large:
+            type: thumbnail
+            options: { size: [417, 652], mode: outbound }
+
+        posters_6_large:
+            type: thumbnail
+            options: { size: [500, 781], mode: outbound }
+
+        posters_7_large:
+            type: thumbnail
+            options: { size: [583, 911], mode: outbound }
+
+        posters_8_large:
+            type: thumbnail
+            options: { size: [667, 1042], mode: outbound }
+
+        posters_9_large:
+            type: thumbnail
+            options: { size: [750, 1172], mode: outbound }
+
+        posters_10_large:
+            type: thumbnail
+            options: { size: [833, 1302], mode: outbound }
+
+        posters_11_large:
+            type: thumbnail
+            options: { size: [917, 1433], mode: outbound }
+
+        posters_12_large:
+            type: thumbnail
+            options: { size: [1000, 1563], mode: outbound }
+
+
 
         
