@@ -4,13 +4,17 @@
 
 {% block tv_shows_content %}
     
-    <dl class="tabs" data-tab>
+    <a href="#" data-dropdown="show-first-char" class="button dropdown">{{ current_first_character ? current_first_character : 'All Shows' }}</a><br>
+    <ul id="show-first-char" data-dropdown-content class="f-dropdown">
+            <li>
+                <a href="{{ path('kyoushu_media_tvshows') }}">All Shows</a>
+            </li>    
         {% for first_character in first_characters %}
-        <dd class="{{ first_character == current_first_character ? 'active' }}">
-            <a href="{{ path('kyoushu_media_tvshows', {'tvShowNameFirstChar': first_character}) }}">{{ first_character }}</a>
-        </dd>
+            <li>
+                <a href="{{ path('kyoushu_media_tvshows', {'tvShowNameFirstChar': first_character}) }}">{{ first_character }}</a>
+            </li>    
         {% endfor %}
-    </dl>
+    </ul>
             
     <div class="row">
         {% for show in shows %}
