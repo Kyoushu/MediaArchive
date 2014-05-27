@@ -1,0 +1,14 @@
+form{
+    
+    textarea{
+        resize: none;
+        min-height: 200px
+    }
+    
+    select{
+        &.error{
+            margin-bottom: 0;
+        }
+    }
+    
+}

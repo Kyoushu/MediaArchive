@@ -16,11 +16,16 @@
         {% endfor %}
     </ul>
             
-    <div class="row">
+    <div class="row tv-shows-list">
         {% for show in shows %}
-            <div class="large-3 columns{{ loop.last ? ' end' }}">
+            <div class="small-6 medium-4 large-3 columns{{ loop.last ? ' end' }}">
                 <a href="{{ path('kyoushu_media_tvshow', {'tvShowSlug': show.slug}) }}">
                     {{ embed.image(show.posterWebPath, 3, null, 'posters') }}
+                    <div class="tv-shows-list--name">
+                        <div class="tv-shows-list--name-inner">
+                            <div>{{ show.name }}</div>
+                        </div>
+                    </div>
                 </a>
             </div>
         {% endfor %}

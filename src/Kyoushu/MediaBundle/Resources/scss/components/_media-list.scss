@@ -1,0 +1,28 @@
+.row.media-list{
+    
+    > .columns{
+        
+        margin-bottom: rem-calc(10);
+        position: relative;
+        
+        .media-list--name{
+            position: absolute;
+            bottom: 0;
+            background: $palette-dark-overlay-bg;
+            color: $palette-dark-overlay-text;
+            font-size: 1.4em;
+            max-width: 80%;
+            
+            small{
+                color: $palette-dark-overlay-small-text;
+            }
+            
+            .media-list--name-inner{
+                padding: rem-calc(10);
+            }
+            
+        }
+        
+    }
+    
+}

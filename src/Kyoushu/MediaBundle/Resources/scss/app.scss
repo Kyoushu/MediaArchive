@@ -4,7 +4,13 @@ $OpenSansPath: "/fonts/open-sans";
 $fa-font-path: "/fonts/font-awesome";
 @import "../../../../../vendor/fortawesome/font-awesome/scss/font-awesome.scss";
 
-@import "media/settings";
+@import "settings";
 @import "foundation";
-@import "media/styles";
-@import "media/video_player";
+
+@import
+    "components/styles",
+    "components/video-player",
+    "components/table",
+    "components/form",
+    "components/media-list",
+    "components/tv-shows-list";

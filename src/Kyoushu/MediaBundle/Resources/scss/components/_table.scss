@@ -1,0 +1,27 @@
+table{
+    width: 100%;
+    
+    td, th{
+        &.table--control{
+            
+            width: 100px;
+            
+            .button{
+                width: 100%;
+            }
+        }
+    }
+    
+    td{
+        
+        .button{
+            margin-bottom: 0;
+        }
+        
+        input[type="checkbox"]{
+            margin-bottom: 0;
+        }
+        
+    }
+    
+}

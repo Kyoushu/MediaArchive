@@ -9,12 +9,12 @@
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>
-                {%- block meta_title -%}
+                {%- block title -%}
                     {{ meta.title() }}
                 {%- endblock -%}
             </title>
             
-            {% block head_stylesheets %}
+            {% block stylesheets %}
                 
                 {% stylesheets
                     "../vendor/components/normalize.css/normalize.css"
@@ -29,65 +29,64 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}
-            
-            {% block header_nav %}
-                {% include 'KyoushuMediaBundle:Default:header_nav.html.twig' %}
-            {% endblock header_nav %}
-            
-            {% block flash_messages %}
-                
-                {% set flash_notices = app.session.flashbag.get('notice') %}
-                    
-                {% if flash_notices|length > 0 %}
-                    <div class="row">
-                        <div class="large-12 columns">
-                            {% for flash_message in flash_notices %}
-                                <div data-alert class="alert-box success">
-                                    {{ flash_message }}
-                                    <a href="#" class="close">&times;</a>
-                                </div>
-                            {% endfor %}
-                        </div>
+        
+        {% block header_nav %}
+            {% include 'KyoushuMediaBundle:Default:header_nav.html.twig' %}
+        {% endblock header_nav %}
+
+        {% block flash_messages %}
+
+            {% set flash_notices = app.session.flashbag.get('notice') %}
+
+            {% if flash_notices|length > 0 %}
+                <div class="row">
+                    <div class="large-12 columns">
+                        {% for flash_message in flash_notices %}
+                            <div data-alert class="alert-box success">
+                                {{ flash_message }}
+                                <a href="#" class="close">&times;</a>
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endif %}
-                
-            {% endblock flash_messages %}
-            
+                </div>
+            {% endif %}
+
+        {% endblock flash_messages %}
+        
+        {% block body %}
             <div class="row">
                 <div class="large-12 columns">
-                    {% block content %}
-                    
-                    {% endblock %}
+                    {% block content %}{% endblock %}
+                    {% block fos_user_content %}{% endblock %}
                 </div>
             </div>
-            
-            {% block body_javascripts %}
-        
-                {% javascripts
-                    'bundles/fosjsrouting/js/router.js'
-                    '../vendor/components/modernizr/modernizr.js'
-                    '../vendor/components/jquery/jquery.js'
-                    '../vendor/zurb/foundation/js/foundation/foundation.js'
-                    '../vendor/zurb/foundation/js/foundation/foundation.interchange.js'
-                    '../vendor/zurb/foundation/js/foundation/foundation.topbar.js'
-                    '../vendor/zurb/foundation/js/foundation/foundation.alert.js'
-                    '../vendor/zurb/foundation/js/foundation/foundation.slider.js'
-                    '../vendor/zurb/foundation/js/foundation/foundation.dropdown.js'
-                    '../vendor/zurb/foundation/js/foundation/foundation.reveal.js'
-                    '@KyoushuMediaBundle/Resources/js/form.js'
-                    '@KyoushuMediaBundle/Resources/js/video_controls.js'
-                    filter="?yui_js"
-                %}
-                    <script src="{{ asset_url }}"></script>
-                {% endjavascripts %}
-                
-                <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-                
-                <script>$(document).foundation();</script>
-                
-            {% endblock %}
-            
         {% endblock %}
+        
+        {% block javascripts %}
+        
+            {% javascripts
+                'bundles/fosjsrouting/js/router.js'
+                '../vendor/components/modernizr/modernizr.js'
+                '../vendor/components/jquery/jquery.js'
+                '../vendor/zurb/foundation/js/foundation/foundation.js'
+                '../vendor/zurb/foundation/js/foundation/foundation.interchange.js'
+                '../vendor/zurb/foundation/js/foundation/foundation.topbar.js'
+                '../vendor/zurb/foundation/js/foundation/foundation.alert.js'
+                '../vendor/zurb/foundation/js/foundation/foundation.slider.js'
+                '../vendor/zurb/foundation/js/foundation/foundation.dropdown.js'
+                '../vendor/zurb/foundation/js/foundation/foundation.reveal.js'
+                '@KyoushuMediaBundle/Resources/js/form.js'
+                '@KyoushuMediaBundle/Resources/js/video_controls.js'
+                filter="?yui_js"
+            %}
+                <script src="{{ asset_url }}"></script>
+            {% endjavascripts %}
+
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+            <script>$(document).foundation();</script>
+
+        {% endblock %}
+        
     </body>
 </html>

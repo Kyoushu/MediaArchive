@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new Kyoushu\MediaBundle\KyoushuMediaBundle(),
             new Kyoushu\FoundationBundle\KyoushuFoundationBundle($this),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
