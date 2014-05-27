@@ -9,7 +9,14 @@ class TvShowRepository extends EntityRepository
     public function getNameFirstCharacters()
     {
         $result = $this->getEntityManager()
-            ->createQuery('SELECT SUBSTRING(s.name, 1, 1) FROM KyoushuMediaBundle:TvShow s ORDER BY s.name ASC')
+            ->getRepository('KyoushuMediaBundle:TvShow')
+            ->createQueryBuilder('t')
+            ->select('SUBSTRING(t.name, 1, 1)')
+            ->innerJoin('t.media', 'm')
+            ->innerJoin('m.source', 's')
+            ->andWhere('s.encoderDestination = 1')
+            ->orderBy('t.name', 'ASC')
+            ->getQuery()
             ->getScalarResult();
         
         $chars = array_map(
@@ -26,8 +33,15 @@ class TvShowRepository extends EntityRepository
     public function findByNameFirstCharacter($firstChar){
         
         return $this->getEntityManager()
-            ->createQuery('select s from KyoushuMediaBundle:TvShow s where s.name like :first_char_like')
+            ->getRepository('KyoushuMediaBundle:TvShow')
+            ->createQueryBuilder('t')
+            ->innerJoin('t.media', 'm')
+            ->innerJoin('m.source', 's')
+            ->andWhere('s.encoderDestination = 1')
+            ->andWhere('t.name LIKE :first_char_like')
             ->setParameter('first_char_like', $firstChar . '%')
+            ->orderBy('t.name', 'ASC')
+            ->getQuery()
             ->getResult();
         
     }

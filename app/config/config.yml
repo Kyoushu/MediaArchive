@@ -83,6 +83,7 @@ kyoushu_media:
     encoder:
         temp_dir: "%kernel.root_dir%/../app/cache/%kernel.environment%/kyoushu_media/encode"
         default_encoder: avconv
+        default_profile: hd
         profiles:
             hd:
                 container: mp4
@@ -201,130 +202,62 @@ kyoushu_media:
             destination: "%kernel.root_dir%/../web/fonts/font-awesome"
                 
 kyoushu_foundation:
-    force_rebuild_stylesheets: false
+    force_rebuild_stylesheets: true
 
 avalanche_imagine:
     filters:
         
         light_background:
-            type: chain
-            options:
-                filters:
-                    thumbnail:
-                        size: [1920, 1200]
-                        mode: outbound
-                    lighten:
-                        percentage: 70
+            type: thumbnail
+            options: { size: [1920, 1200], mode: outbound, quality: 60 }
         
-        # http://fiddle.jshell.net/WqU7p/7/show/light/
-        # {"filterPrefix":"columns","aspectRatio":1.777,"columns":[1,2,3,4,5,6,7,8,9,10,11,12],"containerWidths":{"small":640,"large":1000}}
+        # http://fiddle.jshell.net/g6F9x/3/show/light/
+        # {"prefix":"thumb","lowerWidth":100,"upperWidth":1000,"iterations":5,"aspectRatio":1.7777}
 
-        columns_all_small:
+        thumb_100:
             type: thumbnail
-            options: { size: [640, 360], mode: outbound }
+            options: { size: [100, 56], mode: outbound }
 
-        columns_1_large:
+        thumb_325:
             type: thumbnail
-            options: { size: [83, 47], mode: outbound }
+            options: { size: [325, 183], mode: outbound }
 
-        columns_2_large:
+        thumb_550:
             type: thumbnail
-            options: { size: [167, 94], mode: outbound }
+            options: { size: [550, 309], mode: outbound }
 
-        columns_3_large:
+        thumb_775:
             type: thumbnail
-            options: { size: [250, 141], mode: outbound }
+            options: { size: [775, 436], mode: outbound }
 
-        columns_4_large:
-            type: thumbnail
-            options: { size: [333, 187], mode: outbound }
-
-        columns_5_large:
-            type: thumbnail
-            options: { size: [417, 235], mode: outbound }
-
-        columns_6_large:
-            type: thumbnail
-            options: { size: [500, 281], mode: outbound }
-
-        columns_7_large:
-            type: thumbnail
-            options: { size: [583, 328], mode: outbound }
-
-        columns_8_large:
-            type: thumbnail
-            options: { size: [667, 375], mode: outbound }
-
-        columns_9_large:
-            type: thumbnail
-            options: { size: [750, 422], mode: outbound }
-
-        columns_10_large:
-            type: thumbnail
-            options: { size: [833, 469], mode: outbound }
-
-        columns_11_large:
-            type: thumbnail
-            options: { size: [917, 516], mode: outbound }
-
-        columns_12_large:
+        thumb_1000:
             type: thumbnail
             options: { size: [1000, 563], mode: outbound }
+
             
-        # http://fiddle.jshell.net/WqU7p/7/show/light/
-        # {"filterPrefix":"posters","aspectRatio":0.64,"columns":[1,2,3,4,5,6,7,8,9,10,11,12],"containerWidths":{"small":640,"large":1000}}
+        # http://fiddle.jshell.net/g6F9x/3/show/light/
+        # {"prefix":"poster","lowerWidth":100,"upperWidth":1000,"iterations":5,"aspectRatio":0.64}
 
-        posters_all_small:
+        poster_100:
             type: thumbnail
-            options: { size: [640, 1000], mode: outbound }
+            options: { size: [100, 156], mode: outbound }
 
-        posters_1_large:
+        poster_325:
             type: thumbnail
-            options: { size: [83, 130], mode: outbound }
+            options: { size: [325, 508], mode: outbound }
 
-        posters_2_large:
+        poster_550:
             type: thumbnail
-            options: { size: [167, 261], mode: outbound }
+            options: { size: [550, 859], mode: outbound }
 
-        posters_3_large:
+        poster_775:
             type: thumbnail
-            options: { size: [250, 391], mode: outbound }
+            options: { size: [775, 1211], mode: outbound }
 
-        posters_4_large:
-            type: thumbnail
-            options: { size: [333, 520], mode: outbound }
-
-        posters_5_large:
-            type: thumbnail
-            options: { size: [417, 652], mode: outbound }
-
-        posters_6_large:
-            type: thumbnail
-            options: { size: [500, 781], mode: outbound }
-
-        posters_7_large:
-            type: thumbnail
-            options: { size: [583, 911], mode: outbound }
-
-        posters_8_large:
-            type: thumbnail
-            options: { size: [667, 1042], mode: outbound }
-
-        posters_9_large:
-            type: thumbnail
-            options: { size: [750, 1172], mode: outbound }
-
-        posters_10_large:
-            type: thumbnail
-            options: { size: [833, 1302], mode: outbound }
-
-        posters_11_large:
-            type: thumbnail
-            options: { size: [917, 1433], mode: outbound }
-
-        posters_12_large:
+        poster_1000:
             type: thumbnail
             options: { size: [1000, 1563], mode: outbound }
+
 
 fos_user:
     db_driver: orm

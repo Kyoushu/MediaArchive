@@ -302,7 +302,7 @@ class Processor{
         
         if(!file_exists($absPath)){
             
-            try{
+            //try{
         
                 $ffmpeg = FFMpeg::create();
                 $video = $ffmpeg->open( $media->getAbsPath() );
@@ -317,13 +317,13 @@ class Processor{
                 $frame = $video->frame($timecode);
                 $frame->save($absPath, false);
                 
-            }
-            catch(\Alchemy\BinaryDriver\Exception\ExecutionFailureException $e){
+            //}
+            //catch(\Alchemy\BinaryDriver\Exception\ExecutionFailureException $e){
                 // Do nothing
-            }
-            catch(\FFMpeg\Exception\RuntimeException $e){
+            //}
+            //catch(\FFMpeg\Exception\RuntimeException $e){
                 // Do nothing
-            }
+            //}
             
         }
         

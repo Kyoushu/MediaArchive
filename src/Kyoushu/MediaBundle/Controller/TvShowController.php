@@ -18,8 +18,11 @@ class TvShowController extends Controller
             
             $tvShows = $this->getDoctrine()
                 ->getRepository('KyoushuMediaBundle:TvShow')
-                ->createQueryBuilder('s')
-                ->orderBy('s.name', 'ASC')
+                ->createQueryBuilder('t')
+                ->innerJoin('t.media', 'm')
+                ->innerJoin('m.source', 's')
+                ->andWhere('s.encoderDestination = 1')
+                ->orderBy('t.name', 'ASC')
                 ->getQuery()
                 ->getResult();
             

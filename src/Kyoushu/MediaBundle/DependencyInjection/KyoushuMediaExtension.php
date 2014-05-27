@@ -55,6 +55,7 @@ class KyoushuMediaExtension extends Extension
         
         $encoderManagerServiceDefinition = $container->getDefinition('kyoushu_media.encoder_manager');
         $encoderManagerServiceDefinition->addMethodCall('setDefaultEncoderAlias', array( $config['encoder']['default_encoder'] ));
+        $encoderManagerServiceDefinition->addMethodCall('setDefaultProfileName', array( $config['encoder']['default_profile'] ));
         $encoderManagerServiceDefinition->addMethodCall('setTempDir', array( $config['encoder']['temp_dir'] ));
         $profileDefinitions = array();
         foreach($config['encoder']['profiles'] as $profileName => $profileConfig){

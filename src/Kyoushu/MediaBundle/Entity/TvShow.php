@@ -102,12 +102,19 @@ class TvShow
     protected $bannerWebPath;
     
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Media", mappedBy="tvShow")
+     */
+    protected $media;
+    
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->episodes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->aliases = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->media = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 
@@ -379,4 +386,37 @@ class TvShow
         return $this->getName();
     }
     
+
+    /**
+     * Add media
+     *
+     * @param \Kyoushu\MediaBundle\Entity\Media $media
+     * @return TvShow
+     */
+    public function addMedia(\Kyoushu\MediaBundle\Entity\Media $media)
+    {
+        $this->media[] = $media;
+        $media->setTvShow($this);
+        return $this;
+    }
+
+    /**
+     * Remove media
+     *
+     * @param \Kyoushu\MediaBundle\Entity\Media $media
+     */
+    public function removeMedia(\Kyoushu\MediaBundle\Entity\Media $media)
+    {
+        $this->media->removeElement($media);
+    }
+
+    /**
+     * Get media
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMedia()
+    {
+        return $this->media;
+    }
 }

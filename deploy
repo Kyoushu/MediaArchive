@@ -41,11 +41,6 @@ $tasks = array(
         'command' => 'app/console cache:clear --env=prod'
     ),
     array(
-        'environments' => array('prod'),
-        'description' => 'Clear dev cache',
-        'command' => 'app/console cache:clear --env=dev'
-    ),
-    array(
         'environments' => array('dev'),
         'description' => 'Clear dev cache',
         'command' => 'app/console cache:clear --env=dev'

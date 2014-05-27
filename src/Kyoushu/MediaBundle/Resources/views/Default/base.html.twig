@@ -68,6 +68,7 @@
                 'bundles/fosjsrouting/js/router.js'
                 '../vendor/components/modernizr/modernizr.js'
                 '../vendor/components/jquery/jquery.js'
+                '../vendor/kyoushu/pufferfish.js/pufferfish.js'
                 '../vendor/zurb/foundation/js/foundation/foundation.js'
                 '../vendor/zurb/foundation/js/foundation/foundation.interchange.js'
                 '../vendor/zurb/foundation/js/foundation/foundation.topbar.js'
@@ -84,7 +85,10 @@
 
             <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
-            <script>$(document).foundation();</script>
+            <script>
+                $(document).foundation();
+                $(document).pufferfish();
+            </script>
 
         {% endblock %}
         

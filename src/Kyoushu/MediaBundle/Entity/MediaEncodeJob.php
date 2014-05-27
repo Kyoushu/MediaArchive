@@ -71,6 +71,7 @@ class MediaEncodeJob
      * @var \DateTime
      *
      * @ORM\Column(name="statusChanged", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      */
     protected $statusChanged;
     

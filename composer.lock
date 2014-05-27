@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c4e561784b17c21b78f126875c8faf01",
+    "hash": "f650da4106601e7e47f6b19ec0a50ba4",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -1460,6 +1460,41 @@
             "time": "2014-05-06 21:57:10"
         },
         {
+            "name": "kyoushu/pufferfish.js",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Kyoushu/Pufferfish.js.git",
+                "reference": "e7a9930e11ef5d39219de6bddf5c015da1171395"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Kyoushu/Pufferfish.js/zipball/e7a9930e11ef5d39219de6bddf5c015da1171395",
+                "reference": "e7a9930e11ef5d39219de6bddf5c015da1171395",
+                "shasum": ""
+            },
+            "type": "library",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "James Willans",
+                    "email": "kyoushu@gmail.com"
+                }
+            ],
+            "description": "Container size based responsive image loader",
+            "keywords": [
+                "loader",
+                "responsive"
+            ],
+            "support": {
+                "source": "https://github.com/Kyoushu/Pufferfish.js/tree/master",
+                "issues": "https://github.com/Kyoushu/Pufferfish.js/issues"
+            },
+            "time": "2014-05-27 20:58:46"
+        },
+        {
             "name": "leafo/scssphp",
             "version": "0.0.10",
             "source": {
@@ -2307,16 +2342,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.4.4",
+            "version": "v2.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "4697c33cdfb520dcf83fd6e4f7864fa26ddaebea"
+                "reference": "885b6d17447fcc3cd9c42622321e5af4283dbde1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/4697c33cdfb520dcf83fd6e4f7864fa26ddaebea",
-                "reference": "4697c33cdfb520dcf83fd6e4f7864fa26ddaebea",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/885b6d17447fcc3cd9c42622321e5af4283dbde1",
+                "reference": "885b6d17447fcc3cd9c42622321e5af4283dbde1",
                 "shasum": ""
             },
             "require": {
@@ -2418,7 +2453,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2014-04-27 13:39:18"
+            "time": "2014-05-22 21:04:05"
         },
         {
             "name": "twig/extensions",
@@ -2602,6 +2637,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "kyoushu/pufferfish.js": 20,
         "moinax/tvdb": 20
     },
     "platform": {

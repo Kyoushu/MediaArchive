@@ -12,7 +12,14 @@
 
 <div class="large-{{ large_columns }} medium-{{ medium_columns }} small-{{ small_columns }} columns{{ loop is defined and loop.last ? ' end' }}">
     <a href="{{ path('kyoushu_media_watch', {'mediaId': media.id}) }}">
-        {{ embed.image(media.screencapWebPath, 4) }}
+        
+        {% if media.screencapWebPath is not empty %}
+            {{ embed.image(media.screencapWebPath) }}
+        {% elseif media.category == 'tv' and media.tvShow.fanArtWebPath is not empty %}
+            {{ embed.image(media.tvShow.fanArtWebPath) }}
+        {% endif %}
+        
+        
         <div class="media-list--name">
             <div class="media-list--name-inner">
                 {% block media_name %}

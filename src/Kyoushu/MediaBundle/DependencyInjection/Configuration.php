@@ -72,6 +72,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('temp_dir')->isRequired()->end()
                         ->scalarNode('default_encoder')->isRequired()->end()
+                        ->scalarNode('default_profile')->isRequired()->end()
                         ->arrayNode('profiles')
                             ->isRequired()
                             ->requiresAtLeastOneElement()

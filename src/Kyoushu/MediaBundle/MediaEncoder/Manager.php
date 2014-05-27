@@ -17,6 +17,7 @@ class Manager {
     private $profiles;
     private $tempDir;
     private $defaultEncoderAlias;
+    private $defaultProfileName;
     private $environment;
     private $kernelRootDir;
     
@@ -39,12 +40,30 @@ class Manager {
     
     /**
      * Set defaultEncoderAlias
-     * @param type $defaultEncoderAlias
+     * @param string $defaultEncoderAlias
      * @return \Kyoushu\MediaBundle\MediaEncoder\Manager
      */
     public function setDefaultEncoderAlias($defaultEncoderAlias){
         $this->defaultEncoderAlias = $defaultEncoderAlias;
         return $this;
+    }
+    
+    /**
+     * Set defaultProfileName
+     * @param string $defaultProfileName
+     * @return \Kyoushu\MediaBundle\MediaEncoder\Manager
+     */
+    public function setDefaultProfileName($defaultProfileName){
+        $this->defaultProfileName = $defaultProfileName;
+        return $this;
+    }
+    
+    /**
+     * Get defaultProfileName
+     * @return string
+     */
+    public function getDefaultProfileName(){
+        return $this->defaultProfileName;
     }
     
     /**
@@ -62,6 +81,15 @@ class Manager {
     public function getDefaultEncoder(){
         $alias = $this->getDefaultEncoderAlias();
         return $this->getEncoder($alias);
+    }
+    
+    /**
+     * Get default profile
+     * @return \Kyoushu\MediaBundle\MediaEncoder\Profile
+     */
+    public function getDefaultProfile(){
+        $profileName = $this->getDefaultProfileName();
+        return $this->getProfile($profileName);
     }
     
     /**
@@ -156,7 +184,10 @@ class Manager {
         }
         
         copy($tempPath, $destinationPath);
-        chmod($destinationPath, 0666);
+        
+        // No way round the suppressed error. Ran into problems when using chmod
+        // with mounted CIFS shares.
+        @chmod($destinationPath, 0666);
         
         if(!file_exists($destinationPath)){
             throw new MediaEncoderException("Encoded file could not be copied to destination");

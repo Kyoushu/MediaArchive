@@ -2,33 +2,54 @@
     {%- for key, value in attrs %}{{ not loop.first ? ' ' }}{{ key }}="{{ value }}"{%- endfor -%}
 {%- endmacro %}
 
-{% macro image(path, columns, attrs, filter_prefix) %}
+{% macro pufferfish_attr(path, filter_prefix) -%}
+{% spaceless %}
+    
+    {% if filter_prefix is null or filter_prefix is empty %}
+        {% set filter_prefix = 'thumb' %}
+    {% endif %}
+    
+    {% set widths = [100, 325, 550, 775, 1000] %}
+        
+    {% set pufferfish_attrs = [] %}
+
+    {% for width in widths %}
+
+        {% set prev_width = (not loop.first ? widths[loop.index0 - 1] : null ) %}
+
+        {% set filter = filter_prefix ~ '_' ~ width %}
+        {% set pufferfish_attrs = pufferfish_attrs|merge([
+            '[' ~ path|apply_filter(filter) ~', (' ~
+                (loop.first ? 'max-width: ' ~ width) ~
+                (not loop.first ? 'min-width: ' ~ (prev_width + 1)) ~
+                (not loop.first and not loop.last ? ', ') ~
+                (not loop.last ? 'max-width: ' ~ width) ~
+            ')]'
+        ]) %}
+    {% endfor %}
+        
+    {{ pufferfish_attrs|join(', ') }}
+    
+{% endspaceless %}
+{%- endmacro %}
+
+{% macro image(path, attrs, filter_prefix) %}
     {%- spaceless %}
-    
-        {% if filter_prefix is empty %}
-            {% set filter_prefix = 'columns' %}
+        {% if path is not empty and path is not null %}
+            
+            {% set default_attrs = {
+                'data-pufferfish': _self.pufferfish_attr(path, filter_prefix)
+            } %}
+
+            {% if attrs is empty %}
+                {% set attrs = {} %}
+            {% endif %}
+
+            {% set attrs = default_attrs|merge(attrs) %}
+
+            <img {{ _self.attributes(attrs) }} />
+            
         {% endif %}
-        
-        {% if columns is empty %}
-            {% set columns = 4 %}
-        {% endif %}
-        
-        {% if attrs is empty %}
-            {% set attrs = {} %}
-        {% endif %}
-    
-        {% set path_large = path|apply_filter(filter_prefix ~ '_' ~ columns ~ '_large') %}
-        {% set path_medium = path|apply_filter(filter_prefix ~ '_' ~ columns ~ '_large') %}
-        {% set path_small = path|apply_filter(filter_prefix ~ '_all_small') %}
-    
-        {% set default_attrs = {
-            'data-interchange': '[' ~ path_large ~ ', (default)], [' ~ path_large ~ ', (large)], [' ~ path_medium ~ ', (medium)], [' ~ path_small ~ ', (small)]'
-        } %}
-        
-        {% set attrs = default_attrs|merge(attrs) %}
-    
-        <img {{ _self.attributes(attrs) }} />
-    
     {% endspaceless -%}
 {% endmacro %}
 
@@ -100,11 +121,18 @@
         {% if attrs is empty %}
             {% set attrs = {} %}
         {% endif %}
-    
+            
+        {% if media.screencapWebPath is not empty %}
+            {% set poster_path = media.screencapWebPath %}
+        {% elseif media.category == 'tv' and media.tvShow.fanArtWebPath is not empty %}
+            {% set poster_path = media.tvShow.fanArtWebPath %}
+        {% endif %}
+        
         {% set default_attrs = {
             'id': 'media-video-' ~ media.id,
             'data-media-id': media.id,
-            'poster': media.screencapPath|apply_filter('columns_12_large')
+            'data-pufferfish': _self.pufferfish_attr(poster_path),
+            'data-pufferfish-src-attr': 'poster'
         } %}
     
         {% set attrs = default_attrs|merge(attrs) %}

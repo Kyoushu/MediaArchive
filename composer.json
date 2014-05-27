@@ -9,7 +9,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/Kyoushu/FoundationBundle.git"
+            "url": "https://github.com/Kyoushu/Pufferfish.js.git"
         },
         {
             "type": "package",
@@ -42,6 +42,7 @@
         "kyoushu/foundation-bundle": "0.0.2",
         "font-face-kit/open-sans": "~1.0",
         "fortawesome/font-awesome": "v4.0.3",
+        "kyoushu/pufferfish.js": "dev-master",
         
         "php-ffmpeg/php-ffmpeg": "~0.4",
         "moinax/tvdb": "dev-master",

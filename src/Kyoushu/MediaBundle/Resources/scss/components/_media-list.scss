@@ -5,6 +5,15 @@
         margin-bottom: rem-calc(10);
         position: relative;
         
+        > a{
+            display: block;
+            
+            >img{
+                width: 100%;
+            }
+            
+        }
+        
         .media-list--name{
             position: absolute;
             bottom: 0;

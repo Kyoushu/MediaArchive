@@ -30,3 +30,4 @@ Roll out the production site
 
     */10 * * * *        username        /project_path/app/console kyoushu:media:scan
     */10 * * * *        username        /project_path/app/console kyoushu:media:start-encode-job --auto
+    */10 * * * *        username        /project_path/app/console kyoushu:media:auto-queue-encode-job
